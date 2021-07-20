@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: backend
+      target: development
+    volumes:
+      - ./backend:/usr/src/app

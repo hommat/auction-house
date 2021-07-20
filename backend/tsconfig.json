@@ -20,7 +20,14 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./src/auction-house",
+    "paths": {
+      "@account/*": ["account/*"],
+      "@auction/*": ["auction/*"],
+      "@security/*": ["security/*"],
+      "@shared-kernel/*": ["shared-kernel/*"]
+    }
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.ts"]
