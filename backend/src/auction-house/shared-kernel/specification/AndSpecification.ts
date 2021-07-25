@@ -5,7 +5,7 @@ export class AndSpecification<T> extends CompositeSpecification<T> {
     super();
   }
 
-  isSatisfiedBy(candidate: T): boolean {
+  public isSatisfiedBy(candidate: T): boolean {
     return this.left.isSatisfiedBy(candidate) && this.right.isSatisfiedBy(candidate);
   }
 }

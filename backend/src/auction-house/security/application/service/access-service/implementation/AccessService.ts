@@ -3,17 +3,18 @@ import { Access, Role, UserId } from '@security/domain';
 import { IUserRepository } from '@security/domain/repository';
 
 export class AccessService implements IAccessService {
-  private createAuctionAccess = new Access([Role.USER]);
-  private makeBidAccess = new Access([Role.USER]);
-
   constructor(private _userRepository: IUserRepository) {}
 
   public hasCreateAuctionAccess(userId: number): Promise<boolean> {
-    return this.userExistsAndHasAccess(userId, this.createAuctionAccess);
+    const createAuctionAccess = new Access([Role.USER]);
+
+    return this.userExistsAndHasAccess(userId, createAuctionAccess);
   }
 
   public hasMakeBidAccess(userId: number): Promise<boolean> {
-    return this.userExistsAndHasAccess(userId, this.makeBidAccess);
+    const makeBidAccess = new Access([Role.USER]);
+
+    return this.userExistsAndHasAccess(userId, makeBidAccess);
   }
 
   private async userExistsAndHasAccess(userId: number, access: Access): Promise<boolean> {

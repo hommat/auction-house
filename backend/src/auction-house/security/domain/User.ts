@@ -1,17 +1,13 @@
-import { Role, UserId } from '@security/domain';
+import { Role, RoleSet, UserId } from '@security/domain';
 
 export class User {
-  constructor(private _userId: UserId, private _roles: Role[]) {}
+  constructor(private _userId: UserId, private _roleSet: RoleSet) {}
 
   public hasRole(role: Role): boolean {
-    return this._roles.includes(role);
+    return this._roleSet.includes(role);
   }
 
   public get userId(): UserId {
     return this._userId.copy();
-  }
-
-  public get roles(): Role[] {
-    return [...this._roles];
   }
 }
