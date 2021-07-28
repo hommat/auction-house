@@ -1,4 +1,5 @@
-import { CompositeSpecification, ICompositeSpecification } from '@shared-kernel/specification';
+import { CompositeSpecification } from './CompositeSpecification';
+import { ICompositeSpecification } from './ICompositeSpecification';
 
 export class AndSpecification<T> extends CompositeSpecification<T> {
   constructor(public left: ICompositeSpecification<T>, public right: ICompositeSpecification<T>) {

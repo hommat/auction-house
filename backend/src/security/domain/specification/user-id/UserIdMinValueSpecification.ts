@@ -3,7 +3,7 @@ import { CompositeSpecification } from '@shared-kernel/specification';
 import { MinValueSpecification } from '@shared-kernel/specification/number';
 
 export class UserIdMinValueSpecification extends CompositeSpecification<UserId> {
-  private minValueSpecification = new MinValueSpecification(0);
+  private minValueSpecification = new MinValueSpecification(1);
 
   public isSatisfiedBy(candidate: UserId): boolean {
     return this.minValueSpecification.isSatisfiedBy(candidate.value);
