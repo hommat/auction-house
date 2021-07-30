@@ -8,14 +8,16 @@ export abstract class SecureCommandHandler<CommandType extends Command>
   abstract hasAccess(command: CommandType): Promise<boolean>;
 
   public async execute(command: CommandType): Promise<void> {
-    if (this.isAccessDenied(command)) {
+    if (await this.isAccessDenied(command)) {
       throw new CommandAccessDeniedException();
     }
 
     this.executeSecure(command);
   }
 
-  private isAccessDenied(command: CommandType): boolean {
-    return !this.hasAccess(command);
+  private async isAccessDenied(command: CommandType): Promise<boolean> {
+    const hasAccess = await this.hasAccess(command);
+
+    return !hasAccess;
   }
 }

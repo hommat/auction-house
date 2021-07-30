@@ -19,7 +19,7 @@ export class AccessService implements IAccessService {
 
   private async userExistsAndHasAccess(userId: number, access: Access): Promise<boolean> {
     try {
-      const user = this._userRepository.findOne(UserId.create(userId));
+      const user = await this._userRepository.findOne(UserId.create(userId));
 
       return access.isGrantedTo(user);
     } catch (e) {
