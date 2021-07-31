@@ -6,6 +6,6 @@ export class MinLengthSpecification extends CompositeSpecification<string> {
   }
 
   public isSatisfiedBy(candidate: string): boolean {
-    return candidate.length > this._minLength;
+    return candidate.length >= this._minLength;
   }
 }

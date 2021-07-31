@@ -26,10 +26,6 @@ export class Password {
     return new Password(value);
   }
 
-  public copy(): Password {
-    return new Password(this._value);
-  }
-
   public get value(): string {
     return this._value;
   }

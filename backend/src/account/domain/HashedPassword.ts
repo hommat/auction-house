@@ -1,8 +1,8 @@
 export class HashedPassword {
   constructor(private _value: string) {}
 
-  public copy(): HashedPassword {
-    return new HashedPassword(this._value);
+  public equals(anotherHashedPassword: HashedPassword): boolean {
+    return this._value === anotherHashedPassword.value;
   }
 
   public get value(): string {

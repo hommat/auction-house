@@ -23,8 +23,8 @@ export class Login {
     return new Login(value);
   }
 
-  public copy(): Login {
-    return new Login(this._value);
+  public equals(anotherLogin: Login): boolean {
+    return this._value === anotherLogin.value;
   }
 
   public get value(): string {

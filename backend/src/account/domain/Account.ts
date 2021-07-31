@@ -8,14 +8,14 @@ export class Account {
   ) {}
 
   public get accountId(): AccountId {
-    return this._accountId.copy();
+    return this._accountId;
   }
 
   public get login(): Login {
-    return this._login.copy();
+    return this._login;
   }
 
   public get password(): HashedPassword {
-    return this._password.copy();
+    return this._password;
   }
 }
