@@ -1,7 +1,7 @@
 import { CreateAccountCommand } from '@account/application/command';
 import { LoginAlreadyInUseException } from '@account/application/exception';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
-import { Account, Login, Password } from '@account/domain';
+import { Account } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
 import { ICommandHandler } from '@shared-kernel/command';
 
@@ -12,8 +12,7 @@ export class CreateAccountCommandHandler implements ICommandHandler<CreateAccoun
   ) {}
 
   public async execute(command: CreateAccountCommand): Promise<void> {
-    const login = Login.create(command.login);
-    const password = Password.create(command.password);
+    const { login, password } = command;
 
     if (await this._accountRepository.isLoginAlreadyInUse(login)) {
       throw new LoginAlreadyInUseException();

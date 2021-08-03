@@ -1,14 +1,10 @@
-import { IdMinValueException } from '@shared-kernel/domain/exception/id';
-import { IdMinValueSpecification } from '@shared-kernel/domain/specification/id';
+import { IdValidator } from './validation';
 
 export class Id {
   public static create(value: number): Id {
     const id = new Id(value);
 
-    const idMinValueSpecification = new IdMinValueSpecification();
-    if (!idMinValueSpecification.isSatisfiedBy(id)) {
-      throw new IdMinValueException();
-    }
+    new IdValidator(id).validate();
 
     return id;
   }

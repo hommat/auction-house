@@ -1,21 +1,18 @@
 import { Password } from '@account/domain';
-import {
-  PasswordTooLongException,
-  PasswordTooShortException,
-} from '@account/domain/exception/password';
 import { mockPassword1 } from '@mocks/account';
+import { ValidationFailedException } from '@shared-kernel/validation/ValidationFailedException';
 
 describe('Password', () => {
   describe('create', () => {
-    it('should throw PasswordTooShortException when password has 4 or less characters', () => {
-      expect(() => Password.create('A'.repeat(3))).toThrow(PasswordTooShortException);
-      expect(() => Password.create('A'.repeat(4))).toThrow(PasswordTooShortException);
+    it('should throw ValidationFailedException when password has 4 or less characters', () => {
+      expect(() => Password.create('A'.repeat(3))).toThrow(ValidationFailedException);
+      expect(() => Password.create('A'.repeat(4))).toThrow(ValidationFailedException);
       expect(() => Password.create('A'.repeat(5))).not.toThrowError();
     });
 
-    it('should throw PasswordTooLongException when password has 11 or more characters', () => {
-      expect(() => Password.create('A'.repeat(12))).toThrow(PasswordTooLongException);
-      expect(() => Password.create('A'.repeat(11))).toThrow(PasswordTooLongException);
+    it('should throw ValidationFailedException when password has 11 or more characters', () => {
+      expect(() => Password.create('A'.repeat(12))).toThrow(ValidationFailedException);
+      expect(() => Password.create('A'.repeat(11))).toThrow(ValidationFailedException);
       expect(() => Password.create('A'.repeat(10))).not.toThrowError();
     });
   });

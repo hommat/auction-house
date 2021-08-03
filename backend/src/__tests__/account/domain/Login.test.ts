@@ -1,18 +1,18 @@
 import { Login } from '@account/domain';
-import { LoginTooShortException, LoginTooLongException } from '@account/domain/exception/login';
 import { mockLogin1, mockLogin2 } from '@mocks/account';
+import { ValidationFailedException } from '@shared-kernel/validation';
 
 describe('Login', () => {
   describe('create', () => {
-    it('should throw LoginTooShortException when login has 4 or less characters', () => {
-      expect(() => Login.create('A'.repeat(3))).toThrow(LoginTooShortException);
-      expect(() => Login.create('A'.repeat(4))).toThrow(LoginTooShortException);
+    it('should throw ValidationFailedException when login has 4 or less characters', () => {
+      expect(() => Login.create('A'.repeat(3))).toThrow(ValidationFailedException);
+      expect(() => Login.create('A'.repeat(4))).toThrow(ValidationFailedException);
       expect(() => Login.create('A'.repeat(5))).not.toThrowError();
     });
 
-    it('should throw LoginTooShortException when login has 11 or more characters', () => {
-      expect(() => Login.create('A'.repeat(12))).toThrow(LoginTooLongException);
-      expect(() => Login.create('A'.repeat(11))).toThrow(LoginTooLongException);
+    it('should throw ValidationFailedException when login has 11 or more characters', () => {
+      expect(() => Login.create('A'.repeat(12))).toThrow(ValidationFailedException);
+      expect(() => Login.create('A'.repeat(11))).toThrow(ValidationFailedException);
       expect(() => Login.create('A'.repeat(10))).not.toThrowError();
     });
   });

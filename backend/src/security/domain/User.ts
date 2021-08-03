@@ -8,6 +8,6 @@ export class User {
   }
 
   public get userId(): UserId {
-    return this._userId.copy();
+    return this._userId;
   }
 }

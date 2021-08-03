@@ -1,11 +1,4 @@
-import {
-  PasswordTooLongException,
-  PasswordTooShortException,
-} from '@account/domain/exception/password';
-import {
-  PasswordMaxLengthSpecification,
-  PasswordMinLengthSpecification,
-} from '@account/domain/specification/password';
+import { PasswordValidator } from '@account/domain/validation';
 
 export class Password {
   private constructor(private _value: string) {}
@@ -13,15 +6,7 @@ export class Password {
   public static create(value: string): Password {
     const password = new Password(value);
 
-    const passwordMinLengthSpecification = new PasswordMinLengthSpecification();
-    if (!passwordMinLengthSpecification.isSatisfiedBy(password)) {
-      throw new PasswordTooShortException();
-    }
-
-    const passwordMaxLengthSpecification = new PasswordMaxLengthSpecification();
-    if (!passwordMaxLengthSpecification.isSatisfiedBy(password)) {
-      throw new PasswordTooLongException();
-    }
+    new PasswordValidator(password).validate();
 
     return new Password(value);
   }

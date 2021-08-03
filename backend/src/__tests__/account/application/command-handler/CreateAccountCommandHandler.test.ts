@@ -36,11 +36,11 @@ class TestAccountRepo implements Partial<IAccountRepository> {
   }
 }
 
-class TestCreateAccountCommand extends CreateAccountCommand {
-  constructor() {
-    super(mockLogin1().value, mockPassword1().value);
-  }
-}
+let createAccountCommand: CreateAccountCommand;
+
+beforeEach(() => {
+  createAccountCommand = CreateAccountCommand.create(mockLogin1().value, mockPassword1().value);
+});
 
 describe('CreateAccountCommandHandler', () => {
   describe('execute', () => {
@@ -51,7 +51,7 @@ describe('CreateAccountCommandHandler', () => {
         new TempPasswordHashingService()
       );
 
-      await expect(commandHandler.execute(new TestCreateAccountCommand())).rejects.toThrow(
+      await expect(commandHandler.execute(createAccountCommand)).rejects.toThrow(
         LoginAlreadyInUseException
       );
       expect(createAccountMock.mock.calls.length).toBe(0);
@@ -66,7 +66,7 @@ describe('CreateAccountCommandHandler', () => {
         new TempPasswordHashingService()
       );
 
-      await commandHandler.execute(new TestCreateAccountCommand());
+      await commandHandler.execute(createAccountCommand);
 
       expect(generateIdMock.mock.calls.length).toBe(1);
       expect(createAccountMock.mock.calls.length).toBe(1);
