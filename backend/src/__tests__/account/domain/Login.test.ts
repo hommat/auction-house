@@ -1,19 +1,15 @@
 import { Login } from '@account/domain';
 import { mockLogin1, mockLogin2 } from '@mocks/account';
-import { ValidationFailedException } from '@shared-kernel/validation';
+import { ValidationFailedException, Validator } from '@shared-kernel/validation';
 
 describe('Login', () => {
   describe('create', () => {
-    it('should throw ValidationFailedException when login has 4 or less characters', () => {
-      expect(() => Login.create('A'.repeat(3))).toThrow(ValidationFailedException);
-      expect(() => Login.create('A'.repeat(4))).toThrow(ValidationFailedException);
-      expect(() => Login.create('A'.repeat(5))).not.toThrowError();
-    });
+    it('should throw ValidationFailedException when validation fails', () => {
+      jest.spyOn(Validator.prototype, 'validate').mockImplementationOnce(() => {
+        throw new ValidationFailedException('', {});
+      });
 
-    it('should throw ValidationFailedException when login has 11 or more characters', () => {
-      expect(() => Login.create('A'.repeat(12))).toThrow(ValidationFailedException);
-      expect(() => Login.create('A'.repeat(11))).toThrow(ValidationFailedException);
-      expect(() => Login.create('A'.repeat(10))).not.toThrowError();
+      expect(() => Login.create(mockLogin1().value)).toThrow(ValidationFailedException);
     });
   });
 
