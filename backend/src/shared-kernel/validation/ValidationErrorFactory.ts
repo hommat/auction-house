@@ -26,6 +26,10 @@ export class ValidationErrorFactory {
     );
   }
 
+  public static createFormat(): ValidationError {
+    return new ValidationError(ValidationErrorType.INVALID_FORMAT);
+  }
+
   public static createTooShort(minLength: number): ValidationError {
     return new ValidationError(
       ValidationErrorType.TOO_SHORT,

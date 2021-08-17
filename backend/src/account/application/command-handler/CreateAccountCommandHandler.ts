@@ -1,7 +1,10 @@
 import { CreateAccountCommand } from '@account/application/command';
-import { LoginAlreadyInUseException } from '@account/application/exception';
+import {
+  EmailAlreadyInUseException,
+  LoginAlreadyInUseException,
+} from '@account/application/exception';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
-import { Account } from '@account/domain';
+import { Account, Email, Login } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
 import { ICommandHandler } from '@shared-kernel/command';
 
@@ -12,16 +15,33 @@ export class CreateAccountCommandHandler implements ICommandHandler<CreateAccoun
   ) {}
 
   public async execute(command: CreateAccountCommand): Promise<void> {
-    const { login, password } = command;
+    const { email, login, password } = command;
 
-    if (await this._accountRepository.isLoginAlreadyInUse(login)) {
+    const accountsWithLoginOrEmail = await this._accountRepository.findWithLoginOrEmail(
+      login,
+      email
+    );
+
+    if (this.isLoginAlreadyInUse(login, accountsWithLoginOrEmail)) {
       throw new LoginAlreadyInUseException();
+    }
+
+    if (this.isEmailAlreadyInUse(email, accountsWithLoginOrEmail)) {
+      throw new EmailAlreadyInUseException();
     }
 
     const accountId = await this._accountRepository.generateId();
     const hashedPassword = await this._passwordHashingService.hash(password);
-    const account = new Account(accountId, login, hashedPassword);
+    const account = new Account(accountId, email, login, hashedPassword);
 
     this._accountRepository.create(account);
+  }
+
+  private isLoginAlreadyInUse(login: Login, accountsWithLoginOrEmail: Account[]): boolean {
+    return accountsWithLoginOrEmail.some((account) => account.login.equals(login));
+  }
+
+  private isEmailAlreadyInUse(email: Email, accountsWithLoginOrEmail: Account[]): boolean {
+    return accountsWithLoginOrEmail.some((account) => account.email.equals(email));
   }
 }

@@ -9,8 +9,8 @@ export class AccountRestV1Controller {
   constructor(private _commandDispatcher: ICommandDispatcher) {}
 
   public async createAccount(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const { login, password } = req.body as CreateAccountDTO;
-    const command = CreateAccountCommand.create(login, password);
+    const { email, login, password } = req.body as CreateAccountDTO;
+    const command = CreateAccountCommand.create(email, login, password);
 
     await this._commandDispatcher.dispatch(command);
 

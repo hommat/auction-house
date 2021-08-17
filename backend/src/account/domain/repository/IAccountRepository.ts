@@ -1,7 +1,7 @@
-import { Account, AccountId, Login } from '@account/domain';
+import { Account, AccountId, Email, Login } from '@account/domain';
 
 export interface IAccountRepository {
   create(account: Account): Promise<void>;
   generateId(): Promise<AccountId>;
-  isLoginAlreadyInUse(login: Login): Promise<boolean>;
+  findWithLoginOrEmail(login: Login, email: Email): Promise<Account[]>;
 }

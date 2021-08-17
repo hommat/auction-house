@@ -1,4 +1,7 @@
-import { LoginAlreadyInUseException } from '@account/application/exception';
+import {
+  EmailAlreadyInUseException,
+  LoginAlreadyInUseException,
+} from '@account/application/exception';
 import { AccountRestV1ErrorHandler } from '@account/ui/http/rest/v1';
 import { MockFastifyReply, mockReply } from '@mocks/ui/http/rest/v1';
 import { mockPrototypeOnceWithoutResponse } from '@mocks/utils';
@@ -34,6 +37,28 @@ describe('AccountRestV1ErrorHandler', () => {
 
         expect(reply.mockSend.mock.calls.length).toBe(1);
         expect(reply.mockSend.mock.calls[0][0]).toEqual(loginAlreadyInUseException.toDTO());
+      });
+    });
+
+    describe('EmailAlreadyInUseException', () => {
+      let emailAlreadyInUseException: EmailAlreadyInUseException;
+
+      beforeEach(() => {
+        emailAlreadyInUseException = new EmailAlreadyInUseException();
+      });
+
+      it('should have HTTP status code 409', () => {
+        handler.handle(emailAlreadyInUseException, reply);
+
+        expect(reply.mockCode.mock.calls.length).toBe(1);
+        expect(reply.mockCode.mock.calls[0][0]).toBe(HttpStatusCode.CONFLICT);
+      });
+
+      it('should send validation error converted to dto', () => {
+        handler.handle(emailAlreadyInUseException, reply);
+
+        expect(reply.mockSend.mock.calls.length).toBe(1);
+        expect(reply.mockSend.mock.calls[0][0]).toEqual(emailAlreadyInUseException.toDTO());
       });
     });
 

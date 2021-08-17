@@ -1,13 +1,12 @@
 import { Login } from '@account/domain';
 import { mockLogin1, mockLogin2 } from '@mocks/account';
-import { ValidationFailedException, Validator } from '@shared-kernel/validation';
+import { mockValidationFailure } from '@mocks/utils';
+import { ValidationFailedException } from '@shared-kernel/validation';
 
 describe('Login', () => {
   describe('create', () => {
     it('should throw ValidationFailedException when validation fails', () => {
-      jest.spyOn(Validator.prototype, 'validate').mockImplementationOnce(() => {
-        throw new ValidationFailedException('', {});
-      });
+      mockValidationFailure(true);
 
       expect(() => Login.create(mockLogin1().value)).toThrow(ValidationFailedException);
     });
