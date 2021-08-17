@@ -1,6 +1,6 @@
-import { Command, CommandRegistry } from '@shared-kernel/command';
+import { Command, CommandRegistry, ICommandDispatcher } from '@shared-kernel/command';
 
-export class CommandDispatcher {
+export class CommandDispatcher implements ICommandDispatcher {
   constructor(private _commandRegistry: CommandRegistry) {}
 
   public async dispatch(command: Command): Promise<void> {

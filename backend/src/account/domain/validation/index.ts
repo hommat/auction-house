@@ -1,2 +1,1 @@
-export * from './LoginValidator';
-export * from './PasswordValidator';
+export * from './ValidationField';

@@ -2,7 +2,8 @@ import {
   PasswordMaxLengthSpecification,
   PasswordMinLengthSpecification,
 } from '@account/domain/specification/password';
-import { PasswordValidator } from '@account/domain/validation';
+import { ValidationField } from '@account/domain/validation';
+import { PasswordValidator } from '@account/domain/validation/validator';
 import { mockPassword1 } from '@mocks/account';
 import { mockSpecificationOnce } from '@mocks/utils';
 import { ValidationFailedException } from '@shared-kernel/validation';
@@ -15,6 +16,17 @@ beforeEach(() => {
 
 describe('PasswordValidator', () => {
   describe('validate', () => {
+    it('should throw ValidationFailedException with password field name', () => {
+      mockSpecificationOnce(PasswordMinLengthSpecification, false);
+
+      try {
+        passwordValidator.validate();
+        expect(true).toBe(false);
+      } catch (e) {
+        expect(e.field).toBe(ValidationField.PASSWORD);
+      }
+    });
+
     it('should throw ValidationFailedException when PasswordMinLengthSpecification is not satisfied', () => {
       mockSpecificationOnce(PasswordMinLengthSpecification, false);
 

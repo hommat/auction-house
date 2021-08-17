@@ -31,4 +31,8 @@ export class ValidationErrorFactory {
       new ValidationErrorDetails({ [ValidationErrorDetailType.MAX]: maxLength })
     );
   }
+
+  public static createAlreadyInUse(): ValidationError {
+    return new ValidationError(ValidationErrorType.ALREADY_IN_USE);
+  }
 }

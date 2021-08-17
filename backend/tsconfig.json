@@ -28,6 +28,8 @@
       "@security/*": ["security/*"],
       "@shared-kernel/*": ["shared-kernel/*"],
 
+      "@ui/*": ["ui/*"],
+
       "@mocks/*": ["__tests__/__mocks__/*"]
     }
   },

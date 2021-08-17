@@ -1,4 +1,4 @@
-import { PasswordValidator } from '@account/domain/validation';
+import { PasswordValidator } from '@account/domain/validation/validator';
 
 export class Password {
   private constructor(private _value: string) {}
@@ -9,6 +9,10 @@ export class Password {
     new PasswordValidator(password).validate();
 
     return new Password(value);
+  }
+
+  public equals(anotherPassword: Password): boolean {
+    return this._value === anotherPassword.value;
   }
 
   public get value(): string {

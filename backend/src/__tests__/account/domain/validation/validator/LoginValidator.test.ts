@@ -2,7 +2,8 @@ import {
   LoginMinLengthSpecification,
   LoginMaxLengthSpecification,
 } from '@account/domain/specification/login';
-import { LoginValidator } from '@account/domain/validation';
+import { ValidationField } from '@account/domain/validation';
+import { LoginValidator } from '@account/domain/validation/validator';
 import { mockLogin1 } from '@mocks/account';
 import { mockSpecificationOnce } from '@mocks/utils';
 import { ValidationFailedException } from '@shared-kernel/validation';
@@ -15,6 +16,17 @@ beforeEach(() => {
 
 describe('LoginValidator', () => {
   describe('validate', () => {
+    it('should throw ValidationFailedException with login field name', () => {
+      mockSpecificationOnce(LoginMinLengthSpecification, false);
+
+      try {
+        loginValidator.validate();
+        expect(true).toBe(false);
+      } catch (e) {
+        expect(e.field).toBe(ValidationField.LOGIN);
+      }
+    });
+
     it('should throw ValidationFailedException when LoginMinLengthSpecification is not satisfied', () => {
       mockSpecificationOnce(LoginMinLengthSpecification, false);
 

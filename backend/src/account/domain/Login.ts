@@ -1,4 +1,4 @@
-import { LoginValidator } from '@account/domain/validation';
+import { LoginValidator } from '@account/domain/validation/validator';
 
 export class Login {
   private constructor(private _value: string) {}
