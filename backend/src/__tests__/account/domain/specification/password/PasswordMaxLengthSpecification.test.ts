@@ -1,11 +1,12 @@
 import { Password } from '@account/domain';
 import { PasswordMaxLengthSpecification } from '@account/domain/specification/password';
-import { ValidationError, ValidationErrorType, Validator } from '@shared-kernel/validation';
+import { mockValidationSuccess } from '@mocks/utils';
+import { ValidationError, ValidationErrorType } from '@shared-kernel/validation';
 
 let passwordMaxLengthSpecification: PasswordMaxLengthSpecification;
 
 beforeAll(() => {
-  jest.spyOn(Validator.prototype, 'validate').mockImplementation(jest.fn());
+  mockValidationSuccess();
 });
 
 beforeEach(() => {
@@ -44,15 +45,15 @@ describe('PasswordMaxLengthSpecification', () => {
       validationError = passwordMaxLengthSpecification.validationError();
     });
 
-    it('should has too long type', () => {
+    it('should have too long type', () => {
       expect(validationError.type).toBe(ValidationErrorType.TOO_LONG);
     });
 
-    it('should has 1 detail', () => {
+    it('should have 1 detail', () => {
       expect(Object.keys(validationError.details.details).length).toBe(1);
     });
 
-    it('should has max detail equal 10', () => {
+    it('should have max detail equal 10', () => {
       expect(validationError.details.details.max).toBe(10);
     });
   });

@@ -1,6 +1,7 @@
 export * from './IValidable';
 export * from './ValueObjectValidator';
 export * from './ValidationError';
+export * from './ValidationErrorDataType';
 export * from './ValidationErrorDetails';
 export * from './ValidationErrorDetailType';
 export * from './ValidationErrorFactory';

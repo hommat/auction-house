@@ -1,11 +1,12 @@
 import { Login } from '@account/domain';
 import { LoginMinLengthSpecification } from '@account/domain/specification/login';
-import { ValidationErrorType, ValidationError, Validator } from '@shared-kernel/validation';
+import { mockValidationSuccess } from '@mocks/utils';
+import { ValidationErrorType, ValidationError } from '@shared-kernel/validation';
 
 let loginMinLengthSpecification: LoginMinLengthSpecification;
 
 beforeAll(() => {
-  jest.spyOn(Validator.prototype, 'validate').mockImplementation(jest.fn());
+  mockValidationSuccess();
 });
 
 beforeEach(() => {
@@ -42,15 +43,15 @@ describe('LoginMinLengthSpecification', () => {
       validationError = loginMinLengthSpecification.validationError();
     });
 
-    it('should has too short type', () => {
+    it('should have too short type', () => {
       expect(validationError.type).toBe(ValidationErrorType.TOO_SHORT);
     });
 
-    it('should has 1 detail', () => {
+    it('should have 1 detail', () => {
       expect(Object.keys(validationError.details.details).length).toBe(1);
     });
 
-    it('should has min detail equal 5', () => {
+    it('should have min detail equal 5', () => {
       expect(validationError.details.details.min).toBe(5);
     });
   });

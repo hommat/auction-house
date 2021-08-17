@@ -1,4 +1,5 @@
 import {
+  PasswordDataTypeSpecification,
   PasswordMaxLengthSpecification,
   PasswordMinLengthSpecification,
 } from '@account/domain/specification/password';
@@ -27,6 +28,12 @@ describe('PasswordValidator', () => {
       }
     });
 
+    it('should throw ValidationFailedException when PasswordDataTypeSpecification is not satisfied', () => {
+      mockSpecificationOnce(PasswordDataTypeSpecification, false);
+
+      expect(() => passwordValidator.validate()).toThrow(ValidationFailedException);
+    });
+
     it('should throw ValidationFailedException when PasswordMinLengthSpecification is not satisfied', () => {
       mockSpecificationOnce(PasswordMinLengthSpecification, false);
 
@@ -40,6 +47,7 @@ describe('PasswordValidator', () => {
     });
 
     it('should not throw when every specification is satisfied', () => {
+      mockSpecificationOnce(PasswordDataTypeSpecification, true);
       mockSpecificationOnce(PasswordMinLengthSpecification, true);
       mockSpecificationOnce(PasswordMaxLengthSpecification, true);
 

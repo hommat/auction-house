@@ -1,4 +1,5 @@
 import {
+  LoginDataTypeSpecification,
   LoginMinLengthSpecification,
   LoginMaxLengthSpecification,
 } from '@account/domain/specification/login';
@@ -27,6 +28,12 @@ describe('LoginValidator', () => {
       }
     });
 
+    it('should throw ValidationFailedException when LoginDataTypeSpecification is not satisfied', () => {
+      mockSpecificationOnce(LoginDataTypeSpecification, false);
+
+      expect(() => loginValidator.validate()).toThrow(ValidationFailedException);
+    });
+
     it('should throw ValidationFailedException when LoginMinLengthSpecification is not satisfied', () => {
       mockSpecificationOnce(LoginMinLengthSpecification, false);
 
@@ -40,6 +47,7 @@ describe('LoginValidator', () => {
     });
 
     it('should not throw when every specification is satisfied', () => {
+      mockSpecificationOnce(LoginDataTypeSpecification, true);
       mockSpecificationOnce(LoginMinLengthSpecification, true);
       mockSpecificationOnce(LoginMaxLengthSpecification, true);
 

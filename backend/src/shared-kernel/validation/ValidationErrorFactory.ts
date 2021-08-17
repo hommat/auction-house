@@ -2,8 +2,16 @@ import { ValidationErrorDetails } from './ValidationErrorDetails';
 import { ValidationErrorDetailType } from './ValidationErrorDetailType';
 import { ValidationError } from './ValidationError';
 import { ValidationErrorType } from './ValidationErrorType';
+import { ValidationErrorDataType } from './ValidationErrorDataType';
 
 export class ValidationErrorFactory {
+  public static createType(type: ValidationErrorDataType): ValidationError {
+    return new ValidationError(
+      ValidationErrorType.INVALID_TYPE,
+      new ValidationErrorDetails({ [ValidationErrorDetailType.TYPE]: type })
+    );
+  }
+
   public static createTooSmall(minValue: number): ValidationError {
     return new ValidationError(
       ValidationErrorType.TOO_SMALL,
