@@ -1,42 +1,85 @@
-import { Account } from '@account/domain';
-import { mockAccountId1, mockEmail1, mockLogin1, mockHashedPassword1 } from '@mocks/account';
+import { Account, AccountStatus } from '@account/domain';
+import {
+  AccountNotDeactivatedException,
+  InvalidActivationTokenException,
+} from '@account/domain/exception/account';
+import {
+  mockAccountId1,
+  mockEmail1,
+  mockLogin1,
+  mockHashedPassword1,
+  mockActivationToken1,
+  mockActivationToken2,
+} from '@mocks/account';
 
 describe('Account', () => {
-  describe('getters', () => {
-    describe('accountId', () => {
-      it('should return AccountId given while creating', () => {
-        const accountId = mockAccountId1();
-        const account = new Account(accountId, mockEmail1(), mockLogin1(), mockHashedPassword1());
+  describe('createActivated', () => {
+    it('should create account with status activated', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
 
-        expect(account.accountId).toBe(accountId);
-      });
+      expect(account.status).toBe(AccountStatus.ACTIVATED);
+    });
+  });
+
+  describe('createDeactivated', () => {
+    it('should create account with status activated', () => {
+      const account = Account.createDeactivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1(),
+        mockActivationToken1()
+      );
+
+      expect(account.status).toBe(AccountStatus.DEACTIVATED);
+    });
+  });
+
+  describe('activate', () => {
+    it('should throw AccountNotDeactivatedException when account is not deactivated', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
+
+      expect(() => account.activate(mockActivationToken1())).toThrow(
+        AccountNotDeactivatedException
+      );
     });
 
-    describe('email', () => {
-      it('should return email given while creating', () => {
-        const email = mockEmail1();
-        const account = new Account(mockAccountId1(), email, mockLogin1(), mockHashedPassword1());
+    it('should throw InvalidActivationTokenException when token is not valid', () => {
+      const account = Account.createDeactivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1(),
+        mockActivationToken1()
+      );
 
-        expect(account.email).toBe(email);
-      });
+      expect(() => account.activate(mockActivationToken2())).toThrow(
+        InvalidActivationTokenException
+      );
     });
 
-    describe('login', () => {
-      it('should return Login given while creating', () => {
-        const login = mockLogin1();
-        const account = new Account(mockAccountId1(), mockEmail1(), login, mockHashedPassword1());
+    it('should change account status to activated', () => {
+      const account = Account.createDeactivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1(),
+        mockActivationToken1()
+      );
 
-        expect(account.login).toBe(login);
-      });
-    });
+      account.activate(mockActivationToken1());
 
-    describe('password', () => {
-      it('should return HashedPassword given while creating', () => {
-        const hashedPassword = mockHashedPassword1();
-        const account = new Account(mockAccountId1(), mockEmail1(), mockLogin1(), hashedPassword);
-
-        expect(account.password).toBe(hashedPassword);
-      });
+      expect(account.status).toBe(AccountStatus.ACTIVATED);
     });
   });
 });

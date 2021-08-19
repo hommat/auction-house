@@ -1,4 +1,4 @@
-import { IdValidator } from './validation';
+import { IdValidator } from '@shared-kernel/domain/validation/validator';
 
 export class Id {
   public static create(value: number): Id {

@@ -4,9 +4,7 @@ import {
   EmailAlreadyInUseException,
   LoginAlreadyInUseException,
 } from '@account/application/exception';
-import { TempPasswordHashingService } from '@account/application/service/password-hashing-service/implementation/TempPasswordHashingService';
-import { Account, AccountId, HashedPassword } from '@account/domain';
-import { IAccountRepository } from '@account/domain/repository';
+import { Account, AccountStatus } from '@account/domain';
 import {
   mockAccountId1,
   mockAccountId2,
@@ -17,28 +15,8 @@ import {
   mockPassword1,
   mockHashedPassword2,
 } from '@mocks/account';
-
-class TestAccountRepo implements Partial<IAccountRepository> {
-  constructor(
-    private mockFindWithLoginOrEmailFn: jest.Mock<Account[]> = jest.fn(() => []),
-    private mockCreateAccountFn = jest.fn(),
-    private mockGenerateIdFn = jest.fn()
-  ) {}
-
-  public async findWithLoginOrEmail(): Promise<Account[]> {
-    return this.mockFindWithLoginOrEmailFn();
-  }
-
-  public async generateId(): Promise<AccountId> {
-    this.mockGenerateIdFn();
-
-    return mockAccountId1();
-  }
-
-  public async create(account: Account): Promise<void> {
-    this.mockCreateAccountFn(account);
-  }
-}
+import { mockAccountRepository } from '@mocks/account/repository';
+import { mockNotifyService, mockPasswordHashingService } from '@mocks/account/service';
 
 let createAccountCommand: CreateAccountCommand;
 
@@ -53,65 +31,123 @@ beforeEach(() => {
 describe('CreateAccountCommandHandler', () => {
   describe('execute', () => {
     it('should throw LoginAlreadyInUseException when login is already in use', async () => {
-      const mockFindWithLoginOrEmailFn = jest.fn(() => [
-        new Account(mockAccountId2(), mockEmail2(), mockLogin1(), mockHashedPassword2()),
-      ]);
-      const mockCreateAccountFn = jest.fn();
+      const mockFindWithLoginOrEmailFn = jest
+        .fn()
+        .mockResolvedValue([
+          Account.createActivated(
+            mockAccountId2(),
+            mockEmail2(),
+            mockLogin1(),
+            mockHashedPassword2()
+          ),
+        ]);
+
+      const mockCreateFn = jest.fn().mockReturnValue(Promise.resolve());
+      const mockSendAccountActivationMessageFn = jest.fn().mockReturnValue(Promise.resolve());
 
       const commandHandler = new CreateAccountCommandHandler(
-        new TestAccountRepo(mockFindWithLoginOrEmailFn, mockCreateAccountFn),
-        new TempPasswordHashingService()
+        mockAccountRepository({
+          findByLoginOrEmail: mockFindWithLoginOrEmailFn,
+          create: mockCreateFn,
+        }),
+        mockNotifyService({ sendAccountActivationMessage: mockSendAccountActivationMessageFn }),
+        mockPasswordHashingService()
       );
 
       await expect(commandHandler.execute(createAccountCommand)).rejects.toThrow(
         LoginAlreadyInUseException
       );
 
-      expect(mockCreateAccountFn.mock.calls.length).toBe(0);
+      expect(mockCreateFn.mock.calls.length).toBe(0);
+      expect(mockSendAccountActivationMessageFn.mock.calls.length).toBe(0);
     });
 
     it('should throw EmailAlreadyInUseException when email is already in use', async () => {
-      const mockFindWithLoginOrEmailFn = jest.fn(() => [
-        new Account(mockAccountId2(), mockEmail1(), mockLogin2(), mockHashedPassword2()),
-      ]);
-      const mockCreateAccountFn = jest.fn();
+      const mockFindWithLoginOrEmailFn = jest
+        .fn()
+        .mockResolvedValue([
+          Account.createActivated(
+            mockAccountId2(),
+            mockEmail1(),
+            mockLogin2(),
+            mockHashedPassword2()
+          ),
+        ]);
+      const mockCreateFn = jest.fn().mockReturnValue(Promise.resolve());
+      const mockSendAccountActivationMessageFn = jest.fn().mockReturnValue(Promise.resolve());
 
       const commandHandler = new CreateAccountCommandHandler(
-        new TestAccountRepo(mockFindWithLoginOrEmailFn, mockCreateAccountFn),
-        new TempPasswordHashingService()
+        mockAccountRepository({
+          findByLoginOrEmail: mockFindWithLoginOrEmailFn,
+          create: mockCreateFn,
+        }),
+        mockNotifyService({ sendAccountActivationMessage: mockSendAccountActivationMessageFn }),
+        mockPasswordHashingService()
       );
 
       await expect(commandHandler.execute(createAccountCommand)).rejects.toThrow(
         EmailAlreadyInUseException
       );
 
-      expect(mockCreateAccountFn.mock.calls.length).toBe(0);
+      expect(mockCreateFn.mock.calls.length).toBe(0);
+      expect(mockSendAccountActivationMessageFn.mock.calls.length).toBe(0);
     });
 
-    it('should create Account with given credentials', async () => {
-      const mockCreateAccountFn = jest.fn();
-      const mockGenerateIdFn = jest.fn();
+    it('should hash password', async () => {
+      const hashedPassword = mockHashedPassword2();
+      const mockHashFn = jest.fn().mockResolvedValue(hashedPassword);
+      const mockCreateFn = jest.fn().mockReturnValue(Promise.resolve());
+      const commandHandler = new CreateAccountCommandHandler(
+        mockAccountRepository({ create: mockCreateFn }),
+        mockNotifyService(),
+        mockPasswordHashingService({ hash: mockHashFn })
+      );
+
+      await commandHandler.execute(createAccountCommand);
+
+      expect(mockHashFn.mock.calls.length).toBe(1);
+
+      const createdAccount: Account = mockCreateFn.mock.calls[0][0];
+      expect(createdAccount.password).toBe(hashedPassword);
+    });
+
+    it('should create deactivated Account with given credentials', async () => {
+      const mockCreateFn = jest.fn().mockReturnValue(Promise.resolve());
+      const mockGenerateIdFn = jest.fn().mockReturnValue(Promise.resolve(mockAccountId1()));
 
       const commandHandler = new CreateAccountCommandHandler(
-        new TestAccountRepo(
-          jest.fn(() => []),
-          mockCreateAccountFn,
-          mockGenerateIdFn
-        ),
-        new TempPasswordHashingService()
+        mockAccountRepository({
+          create: mockCreateFn,
+          generateId: mockGenerateIdFn,
+        }),
+        mockNotifyService(),
+        mockPasswordHashingService()
       );
 
       await commandHandler.execute(createAccountCommand);
 
       expect(mockGenerateIdFn.mock.calls.length).toBe(1);
-      expect(mockCreateAccountFn.mock.calls.length).toBe(1);
+      expect(mockCreateFn.mock.calls.length).toBe(1);
 
-      const createdAccount: Account = mockCreateAccountFn.mock.calls[0][0];
+      const createdAccount: Account = mockCreateFn.mock.calls[0][0];
 
+      expect(createdAccount.status).toBe(AccountStatus.DEACTIVATED);
       expect(createdAccount.accountId.equals(mockAccountId1())).toBe(true);
       expect(createdAccount.email.equals(mockEmail1())).toBe(true);
       expect(createdAccount.login.equals(mockLogin1())).toBe(true);
-      expect(createdAccount.password.equals(new HashedPassword(mockPassword1().value))).toBe(true);
+    });
+
+    it('should send account activation message', async () => {
+      const mockSendAccountActivationMessageFn = jest.fn().mockReturnValue(Promise.resolve());
+      const commandHandler = new CreateAccountCommandHandler(
+        mockAccountRepository(),
+        mockNotifyService({ sendAccountActivationMessage: mockSendAccountActivationMessageFn }),
+        mockPasswordHashingService()
+      );
+
+      await commandHandler.execute(createAccountCommand);
+
+      expect(mockSendAccountActivationMessageFn.mock.calls.length).toBe(1);
     });
   });
 });

@@ -3,24 +3,24 @@ import {
   EmailAlreadyInUseException,
   LoginAlreadyInUseException,
 } from '@account/application/exception';
+import { INotifyService } from '@account/application/service/notify-service';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
-import { Account, Email, Login } from '@account/domain';
+import { Account, ActivationToken, Email, Login } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
 import { ICommandHandler } from '@shared-kernel/command';
+import { UuidGenerator } from '@shared-kernel/factory';
 
 export class CreateAccountCommandHandler implements ICommandHandler<CreateAccountCommand> {
   constructor(
     private _accountRepository: IAccountRepository,
+    private _notifyService: INotifyService,
     private _passwordHashingService: IPasswordHashingService
   ) {}
 
   public async execute(command: CreateAccountCommand): Promise<void> {
     const { email, login, password } = command;
 
-    const accountsWithLoginOrEmail = await this._accountRepository.findWithLoginOrEmail(
-      login,
-      email
-    );
+    const accountsWithLoginOrEmail = await this._accountRepository.findByLoginOrEmail(login, email);
 
     if (this.isLoginAlreadyInUse(login, accountsWithLoginOrEmail)) {
       throw new LoginAlreadyInUseException();
@@ -32,9 +32,17 @@ export class CreateAccountCommandHandler implements ICommandHandler<CreateAccoun
 
     const accountId = await this._accountRepository.generateId();
     const hashedPassword = await this._passwordHashingService.hash(password);
-    const account = new Account(accountId, email, login, hashedPassword);
+    const activationToken = new ActivationToken(UuidGenerator.generate());
+    const account = Account.createDeactivated(
+      accountId,
+      email,
+      login,
+      hashedPassword,
+      activationToken
+    );
 
-    this._accountRepository.create(account);
+    await this._accountRepository.create(account);
+    this._notifyService.sendAccountActivationMessage(account);
   }
 
   private isLoginAlreadyInUse(login: Login, accountsWithLoginOrEmail: Account[]): boolean {

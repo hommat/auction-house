@@ -21,15 +21,4 @@ describe('Email', () => {
       expect(mockEmail1().equals(mockEmail2())).toBe(false);
     });
   });
-
-  describe('getters', () => {
-    describe('value', () => {
-      it('should return value given while creating', () => {
-        const value = mockEmail1().value;
-        const email = Email.create(value);
-
-        expect(email.value).toBe(value);
-      });
-    });
-  });
 });

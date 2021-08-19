@@ -21,15 +21,4 @@ describe('Password', () => {
       expect(mockPassword1().equals(mockPassword2())).toBe(false);
     });
   });
-
-  describe('getters', () => {
-    describe('value', () => {
-      it('should return value given while creating', () => {
-        const value = mockPassword1().value;
-        const password = Password.create(value);
-
-        expect(password.value).toBe(value);
-      });
-    });
-  });
 });

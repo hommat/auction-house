@@ -1,7 +1,12 @@
 import {
+  AccountNotFoundException,
   EmailAlreadyInUseException,
   LoginAlreadyInUseException,
 } from '@account/application/exception';
+import {
+  AccountNotDeactivatedException,
+  InvalidActivationTokenException,
+} from '@account/domain/exception/account';
 import { AccountRestV1ErrorHandler } from '@account/ui/http/rest/v1';
 import { MockFastifyReply, mockReply } from '@mocks/ui/http/rest/v1';
 import { mockPrototypeOnceWithoutResponse } from '@mocks/utils';
@@ -18,6 +23,51 @@ beforeEach(() => {
 
 describe('AccountRestV1ErrorHandler', () => {
   describe('handle', () => {
+    describe('AccountNotDeactivatedException', () => {
+      let accountNotDeactivatedException: AccountNotDeactivatedException;
+
+      beforeEach(() => {
+        accountNotDeactivatedException = new AccountNotDeactivatedException();
+      });
+
+      it('should have HTTP status code 409', () => {
+        handler.handle(accountNotDeactivatedException, reply);
+
+        expect(reply.mockCode.mock.calls.length).toBe(1);
+        expect(reply.mockCode.mock.calls[0][0]).toBe(HttpStatusCode.CONFLICT);
+      });
+    });
+
+    describe('InvalidActivationTokenException', () => {
+      let invalidActivationTokenException: InvalidActivationTokenException;
+
+      beforeEach(() => {
+        invalidActivationTokenException = new InvalidActivationTokenException();
+      });
+
+      it('should have HTTP status code 409', () => {
+        handler.handle(invalidActivationTokenException, reply);
+
+        expect(reply.mockCode.mock.calls.length).toBe(1);
+        expect(reply.mockCode.mock.calls[0][0]).toBe(HttpStatusCode.CONFLICT);
+      });
+    });
+
+    describe('AccountNotFoundException', () => {
+      let accountNotFoundException: AccountNotFoundException;
+
+      beforeEach(() => {
+        accountNotFoundException = new AccountNotFoundException();
+      });
+
+      it('should have HTTP status code 404', () => {
+        handler.handle(accountNotFoundException, reply);
+
+        expect(reply.mockCode.mock.calls.length).toBe(1);
+        expect(reply.mockCode.mock.calls[0][0]).toBe(HttpStatusCode.NOT_FOUND);
+      });
+    });
+
     describe('LoginAlreadyInUseException', () => {
       let loginAlreadyInUseException: LoginAlreadyInUseException;
 

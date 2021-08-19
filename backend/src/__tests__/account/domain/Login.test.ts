@@ -21,15 +21,4 @@ describe('Login', () => {
       expect(mockLogin1().equals(mockLogin2())).toBe(false);
     });
   });
-
-  describe('getters', () => {
-    describe('value', () => {
-      it('should return value given while creating', () => {
-        const value = mockLogin1().value;
-        const login = Login.create(value);
-
-        expect(login.value).toBe(value);
-      });
-    });
-  });
 });
