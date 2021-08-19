@@ -14,6 +14,7 @@ export interface IAccountRepository {
   saveAndDestroyChangePasswordToken(account: Account): Promise<void>;
 
   findByActivationToken(activationToken: ActivationToken): Promise<Account | null>;
-  findByLoginOrEmail(login: Login, email: Email): Promise<Account[]>;
   findByChangePasswordTokenUuid(changePasswordTokenUuid: Uuid): Promise<Account | null>;
+  findByLoginOrEmail(login: Login, email: Email): Promise<Account[]>;
+  findByEmail(email: Email): Promise<Account | null>;
 }
