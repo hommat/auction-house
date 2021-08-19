@@ -1,7 +1,8 @@
 import { ActivateAccountCommand } from '@account/application/command';
-import { ActivateAccountCommandHandler } from '@account/application/command-handler/ActivateAccountCommandHandler';
+import { ActivateAccountCommandHandler } from '@account/application/command-handler';
 import { AccountNotFoundException } from '@account/application/exception';
 import { Account } from '@account/domain';
+import { mockDeactivatedAccount1 } from '@mocks/account';
 import { mockAccountRepository } from '@mocks/account/repository';
 import { mockUuid1 } from '@mocks/shared-kernel';
 
@@ -43,6 +44,20 @@ describe('ActivateAccountCommandHandler', () => {
       await commandHandler.execute(activateAccountCommand);
 
       expect(mockActivateFn.mock.calls.length).toBe(1);
+    });
+
+    it('should save account', async () => {
+      const mockSaveFn = jest.fn().mockReturnValue(Promise.resolve());
+
+      const commandHandler = new ActivateAccountCommandHandler(
+        mockAccountRepository({
+          findByActivationToken: jest.fn().mockResolvedValue(mockDeactivatedAccount1()),
+          save: mockSaveFn,
+        })
+      );
+
+      await commandHandler.execute(activateAccountCommand);
+      expect(mockSaveFn.mock.calls.length).toBe(1);
     });
   });
 });

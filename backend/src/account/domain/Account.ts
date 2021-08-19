@@ -64,6 +64,10 @@ export class Account {
     return this.hasActivationToken && this._activationToken!.equals(activationToken);
   }
 
+  public changePassword(newPassword: HashedPassword): void {
+    this._password = newPassword;
+  }
+
   public get accountId(): AccountId {
     return this._accountId;
   }

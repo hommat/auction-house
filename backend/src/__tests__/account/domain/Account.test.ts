@@ -8,6 +8,7 @@ import {
   mockEmail1,
   mockLogin1,
   mockHashedPassword1,
+  mockHashedPassword2,
   mockActivationToken1,
   mockActivationToken2,
 } from '@mocks/account';
@@ -80,6 +81,22 @@ describe('Account', () => {
       account.activate(mockActivationToken1());
 
       expect(account.status).toBe(AccountStatus.ACTIVATED);
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should update password', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
+
+      const newPassword = mockHashedPassword2();
+      account.changePassword(newPassword);
+
+      expect(account.password.equals(newPassword));
     });
   });
 });
