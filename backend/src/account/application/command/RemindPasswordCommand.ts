@@ -1,9 +1,10 @@
+import { RemindPasswordCommandInput } from '@account/application/command/input';
 import { Email } from '@account/domain';
 import { Command } from '@shared-kernel/cqrs/command';
 
 export class RemindPasswordCommand extends Command {
-  public static create(plainEmail: string): RemindPasswordCommand {
-    const [email, emailValidationErr] = this.createSafe(() => Email.create(plainEmail));
+  public static create(i: RemindPasswordCommandInput): RemindPasswordCommand {
+    const [email, emailValidationErr] = this.createSafe(() => Email.create(i.email));
 
     this.throwInvalidInputExceptionIfNeeded(emailValidationErr);
 

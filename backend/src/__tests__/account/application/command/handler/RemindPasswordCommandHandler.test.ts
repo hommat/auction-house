@@ -1,5 +1,6 @@
 import { RemindPasswordCommand } from '@account/application/command';
-import { RemindPasswordCommandHandler } from '@account/application/command-handler';
+import { RemindPasswordCommandHandler } from '@account/application/command/handler';
+import { RemindPasswordCommandInput } from '@account/application/command/input';
 import { mockEmail1 } from '@mocks/account';
 import { mockAccountRepository } from '@mocks/account/repository';
 import { mockNotifyService } from '@mocks/account/service';
@@ -7,7 +8,9 @@ import { mockNotifyService } from '@mocks/account/service';
 let remindPasswordCommand: RemindPasswordCommand;
 
 beforeEach(() => {
-  remindPasswordCommand = RemindPasswordCommand.create(mockEmail1().value);
+  remindPasswordCommand = RemindPasswordCommand.create(
+    new RemindPasswordCommandInput(mockEmail1().value)
+  );
 });
 
 describe('RemindPasswordCommandHandler', () => {

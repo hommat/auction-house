@@ -1,5 +1,6 @@
 import { ChangePasswordCommand } from '@account/application/command';
-import { ChangePasswordCommandHandler } from '@account/application/command-handler';
+import { ChangePasswordCommandHandler } from '@account/application/command/handler';
+import { ChangePasswordCommandInput } from '@account/application/command/input';
 import { AccountNotFoundException } from '@account/application/exception';
 import { Account } from '@account/domain';
 import { mockHashedPassword1, mockPassword1 } from '@mocks/account';
@@ -10,7 +11,9 @@ import { mockUuid1 } from '@mocks/shared-kernel';
 let changePasswordCommand: ChangePasswordCommand;
 
 beforeEach(() => {
-  changePasswordCommand = ChangePasswordCommand.create(mockUuid1().value, mockPassword1().value);
+  changePasswordCommand = ChangePasswordCommand.create(
+    new ChangePasswordCommandInput(mockUuid1().value, mockPassword1().value)
+  );
 });
 
 describe('ChangePasswordCommandHandler', () => {

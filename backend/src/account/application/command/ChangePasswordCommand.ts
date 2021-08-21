@@ -1,17 +1,15 @@
+import { ChangePasswordCommandInput } from '@account/application/command/input';
 import { Password } from '@account/domain';
 import { Command } from '@shared-kernel/cqrs/command';
 import { Uuid } from '@shared-kernel/domain';
 
 export class ChangePasswordCommand extends Command {
-  public static create(
-    plainChangePasswordUuid: string,
-    plainPassword: string
-  ): ChangePasswordCommand {
+  public static create(i: ChangePasswordCommandInput): ChangePasswordCommand {
     const [changePasswordTokenUuid, changePasswordTokenUuidValidationErr] = this.createSafe(() =>
-      Uuid.create(plainChangePasswordUuid)
+      Uuid.create(i.changePasswordTokenUuid)
     );
 
-    const [password, passwordValidationErr] = this.createSafe(() => Password.create(plainPassword));
+    const [password, passwordValidationErr] = this.createSafe(() => Password.create(i.password));
 
     this.throwInvalidInputExceptionIfNeeded(
       changePasswordTokenUuidValidationErr,

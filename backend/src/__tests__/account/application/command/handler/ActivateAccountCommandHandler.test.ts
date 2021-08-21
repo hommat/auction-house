@@ -1,5 +1,6 @@
 import { ActivateAccountCommand } from '@account/application/command';
-import { ActivateAccountCommandHandler } from '@account/application/command-handler';
+import { ActivateAccountCommandHandler } from '@account/application/command/handler';
+import { ActivateAccountCommandInput } from '@account/application/command/input';
 import { AccountNotFoundException } from '@account/application/exception';
 import { Account } from '@account/domain';
 import { mockDeactivatedAccount1 } from '@mocks/account';
@@ -9,7 +10,9 @@ import { mockUuid1 } from '@mocks/shared-kernel';
 let activateAccountCommand: ActivateAccountCommand;
 
 beforeEach(() => {
-  activateAccountCommand = ActivateAccountCommand.create(mockUuid1().value);
+  activateAccountCommand = ActivateAccountCommand.create(
+    new ActivateAccountCommandInput(mockUuid1().value)
+  );
 });
 
 describe('ActivateAccountCommandHandler', () => {

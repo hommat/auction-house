@@ -1,5 +1,6 @@
 import { CreateAccountCommand } from '@account/application/command';
-import { CreateAccountCommandHandler } from '@account/application/command-handler';
+import { CreateAccountCommandHandler } from '@account/application/command/handler';
+import { CreateAccountCommandInput } from '@account/application/command/input';
 import {
   EmailAlreadyInUseException,
   LoginAlreadyInUseException,
@@ -22,9 +23,7 @@ let createAccountCommand: CreateAccountCommand;
 
 beforeEach(() => {
   createAccountCommand = CreateAccountCommand.create(
-    mockEmail1().value,
-    mockLogin1().value,
-    mockPassword1().value
+    new CreateAccountCommandInput(mockEmail1().value, mockLogin1().value, mockPassword1().value)
   );
 });
 

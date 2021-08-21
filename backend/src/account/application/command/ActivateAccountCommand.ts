@@ -1,10 +1,11 @@
+import { ActivateAccountCommandInput } from '@account/application/command/input';
 import { Command } from '@shared-kernel/cqrs/command';
 import { Uuid } from '@shared-kernel/domain';
 
 export class ActivateAccountCommand extends Command {
-  public static create(plainActivationTokenUuid: string): ActivateAccountCommand {
+  public static create(i: ActivateAccountCommandInput): ActivateAccountCommand {
     const [activationTokenUuid, activationTokenUuidValidationErr] = this.createSafe(() =>
-      Uuid.create(plainActivationTokenUuid)
+      Uuid.create(i.activationTokenUuid)
     );
 
     this.throwInvalidInputExceptionIfNeeded(activationTokenUuidValidationErr);

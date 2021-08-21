@@ -1,15 +1,12 @@
+import { CreateAccountCommandInput } from '@account/application/command/input';
 import { Email, Login, Password } from '@account/domain';
 import { Command } from '@shared-kernel/cqrs/command';
 
 export class CreateAccountCommand extends Command {
-  public static create(
-    plainEmail: string,
-    plainLogin: string,
-    plainPassword: string
-  ): CreateAccountCommand {
-    const [email, emailValidationErr] = this.createSafe(() => Email.create(plainEmail));
-    const [login, loginValidationErr] = this.createSafe(() => Login.create(plainLogin));
-    const [password, passwordValidationErr] = this.createSafe(() => Password.create(plainPassword));
+  public static create(i: CreateAccountCommandInput): CreateAccountCommand {
+    const [email, emailValidationErr] = this.createSafe(() => Email.create(i.email));
+    const [login, loginValidationErr] = this.createSafe(() => Login.create(i.login));
+    const [password, passwordValidationErr] = this.createSafe(() => Password.create(i.password));
 
     this.throwInvalidInputExceptionIfNeeded(
       emailValidationErr,
