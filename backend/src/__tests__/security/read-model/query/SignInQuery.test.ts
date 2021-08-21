@@ -1,5 +1,5 @@
 import { mockLogin1, mockPassword1 } from '@mocks/account';
-import { SignInQueryInput } from '@security/read-model/input';
+import { SignInQueryInput } from '@security/read-model/query/input';
 import { SingInQuery } from '@security/read-model/query';
 import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
