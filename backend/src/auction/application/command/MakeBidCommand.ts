@@ -1,4 +1,4 @@
-import { Command } from '@shared-kernel/command';
+import { Command } from '@shared-kernel/cqrs/command';
 
 export class MakeBidCommand extends Command {
   constructor(private _auctionId: number, private _bidOwnerId: number, private _bidAmount: number) {

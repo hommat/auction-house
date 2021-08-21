@@ -1,11 +1,11 @@
 import { ActivateAccountCommand } from '@account/application/command';
 import { mockUuid1 } from '@mocks/shared-kernel';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
 describe('ActivateAccountCommand', () => {
   describe('create', () => {
-    it('should throw CommandInvalidInputException when activationTokenUuid is not valid', () => {
-      expect(() => ActivateAccountCommand.create('')).toThrow(CommandInvalidInputException);
+    it('should throw InvalidInputException when activationTokenUuid is not valid', () => {
+      expect(() => ActivateAccountCommand.create('')).toThrow(InvalidInputException);
     });
 
     it('should return ActivateAccountCommand when input is valid', () => {

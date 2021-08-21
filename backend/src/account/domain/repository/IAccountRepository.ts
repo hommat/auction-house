@@ -1,9 +1,5 @@
-import { Account, AccountId, ActivationToken, Email, Login } from '@account/domain';
+import { Account, AccountId, ActivationToken, Email, HashedPassword, Login } from '@account/domain';
 import { Uuid } from '@shared-kernel/domain';
-
-export interface IAccountSaveOptions {
-  activated?: boolean;
-}
 
 export interface IAccountRepository {
   generateId(): Promise<AccountId>;

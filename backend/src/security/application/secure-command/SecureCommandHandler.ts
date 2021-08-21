@@ -1,5 +1,5 @@
-import { CommandAccessDeniedException } from '@security/application/command/exception';
-import { Command, ICommandHandler } from '@shared-kernel/command';
+import { CommandAccessDeniedException } from '@security/application/secure-command/exception';
+import { Command, ICommandHandler } from '@shared-kernel/cqrs/command';
 
 export abstract class SecureCommandHandler<CommandType extends Command>
   implements ICommandHandler<CommandType>

@@ -1,19 +1,19 @@
 import { ChangePasswordCommand } from '@account/application/command';
 import { mockPassword1 } from '@mocks/account';
 import { mockUuid1 } from '@mocks/shared-kernel';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
 describe('ChangePasswordCommand', () => {
   describe('create', () => {
-    it('should throw CommandInvalidInputException when changePasswordTokenUuid is not valid', () => {
+    it('should throw InvalidInputException when changePasswordTokenUuid is not valid', () => {
       expect(() => ChangePasswordCommand.create('', mockPassword1().value)).toThrow(
-        CommandInvalidInputException
+        InvalidInputException
       );
     });
 
-    it('should throw CommandInvalidInputException when password is not valid', () => {
+    it('should throw InvalidInputException when password is not valid', () => {
       expect(() => ChangePasswordCommand.create(mockUuid1().value, '')).toThrow(
-        CommandInvalidInputException
+        InvalidInputException
       );
     });
 

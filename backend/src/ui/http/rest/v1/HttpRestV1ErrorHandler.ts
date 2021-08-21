@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify';
 
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 import { ValidationFailedException } from '@shared-kernel/validation';
 import { HttpStatusCode } from '@ui/http/HttpStatusCode';
 import { IHttpV1ErrorHandler } from '@ui/http/rest/v1';
@@ -8,18 +8,16 @@ import { IHttpV1ErrorHandler } from '@ui/http/rest/v1';
 export class HttpRestV1ErrorHandler implements IHttpV1ErrorHandler {
   public handle(err: Error, rep: FastifyReply): FastifyReply {
     switch (err.constructor) {
-      case CommandInvalidInputException:
-        const commandInvalidInputException = err as CommandInvalidInputException;
-
+      case InvalidInputException:
         return rep.code(HttpStatusCode.BAD_REQUEST).send({
-          errors: commandInvalidInputException.validationExceptions.map((validationException) =>
+          errors: (err as InvalidInputException).validationExceptions.map((validationException) =>
             validationException.toDTO()
           ),
         });
       case ValidationFailedException:
-        const validationFailedException = err as ValidationFailedException;
-
-        return rep.code(HttpStatusCode.BAD_REQUEST).send(validationFailedException.toDTO());
+        return rep
+          .code(HttpStatusCode.BAD_REQUEST)
+          .send((err as ValidationFailedException).toDTO());
       default:
         return rep.code(HttpStatusCode.INTERNAL_SERVER_ERROR);
     }

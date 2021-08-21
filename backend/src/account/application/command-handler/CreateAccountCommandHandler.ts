@@ -7,7 +7,7 @@ import { INotifyService } from '@account/application/service/notify-service';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
 import { Account, ActivationToken, Email, Login } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
-import { ICommandHandler } from '@shared-kernel/command';
+import { ICommandHandler } from '@shared-kernel/cqrs/command';
 import { UuidGenerator } from '@shared-kernel/factory';
 
 export class CreateAccountCommandHandler implements ICommandHandler<CreateAccountCommand> {

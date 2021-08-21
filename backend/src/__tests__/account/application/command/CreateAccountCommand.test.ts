@@ -1,24 +1,24 @@
 import { CreateAccountCommand } from '@account/application/command';
 import { mockEmail1, mockLogin1, mockPassword1 } from '@mocks/account';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
 describe('CreateAccountCommand', () => {
   describe('create', () => {
-    it('should throw CommandInvalidInputException when email is not valid', () => {
+    it('should throw InvalidInputException when email is not valid', () => {
       expect(() =>
         CreateAccountCommand.create('', mockLogin1().value, mockPassword1().value)
-      ).toThrow(CommandInvalidInputException);
+      ).toThrow(InvalidInputException);
     });
 
-    it('should throw CommandInvalidInputException when login is not valid', () => {
+    it('should throw InvalidInputException when login is not valid', () => {
       expect(() =>
         CreateAccountCommand.create(mockEmail1().value, '', mockPassword1().value)
-      ).toThrow(CommandInvalidInputException);
+      ).toThrow(InvalidInputException);
     });
 
-    it('should throw CommandInvalidInputException when password is not valid', () => {
+    it('should throw InvalidInputException when password is not valid', () => {
       expect(() => CreateAccountCommand.create(mockEmail1().value, mockLogin1().value, '')).toThrow(
-        CommandInvalidInputException
+        InvalidInputException
       );
     });
 

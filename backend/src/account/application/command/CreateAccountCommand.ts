@@ -1,5 +1,5 @@
 import { Email, Login, Password } from '@account/domain';
-import { Command } from '@shared-kernel/command';
+import { Command } from '@shared-kernel/cqrs/command';
 
 export class CreateAccountCommand extends Command {
   public static create(

@@ -2,7 +2,7 @@ import { ChangePasswordCommand } from '@account/application/command';
 import { AccountNotFoundException } from '@account/application/exception';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
 import { IAccountRepository } from '@account/domain/repository';
-import { ICommandHandler } from '@shared-kernel/command';
+import { ICommandHandler } from '@shared-kernel/cqrs/command';
 
 export class ChangePasswordCommandHandler implements ICommandHandler<ChangePasswordCommand> {
   constructor(

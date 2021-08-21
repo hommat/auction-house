@@ -1,5 +1,5 @@
 import { MockFastifyReply, mockReply } from '@mocks/ui/http/rest/v1';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 import { ValidationFailedException, ValidationErrorFactory } from '@shared-kernel/validation';
 import { HttpStatusCode } from '@ui/http';
 import { HttpRestV1ErrorHandler } from '@ui/http/rest/v1';
@@ -14,7 +14,7 @@ beforeEach(() => {
 
 describe('HttpRestV1ErrorHandler', () => {
   describe('handle', () => {
-    describe('CommandInvalidInputException', () => {
+    describe('InvalidInputException', () => {
       const alreadyInUseError = ValidationErrorFactory.createAlreadyInUse();
       const tooLongError = ValidationErrorFactory.createTooLong(10);
 
@@ -27,24 +27,21 @@ describe('HttpRestV1ErrorHandler', () => {
         [alreadyInUseError.type]: alreadyInUseError.details,
       });
 
-      let commandInvalidInputException: CommandInvalidInputException;
+      let invalidInputException: InvalidInputException;
 
       beforeEach(() => {
-        commandInvalidInputException = new CommandInvalidInputException([
-          firstException,
-          secondException,
-        ]);
+        invalidInputException = new InvalidInputException([firstException, secondException]);
       });
 
       it('should have HTTP status code 400', () => {
-        handler.handle(commandInvalidInputException, reply);
+        handler.handle(invalidInputException, reply);
 
         expect(reply.mockCode.mock.calls.length).toBe(1);
         expect(reply.mockCode.mock.calls[0][0]).toBe(HttpStatusCode.BAD_REQUEST);
       });
 
       it('should send validation error array converted to dto', () => {
-        handler.handle(commandInvalidInputException, reply);
+        handler.handle(invalidInputException, reply);
 
         expect(reply.mockSend.mock.calls.length).toBe(1);
         expect(reply.mockSend.mock.calls[0][0]).toEqual({

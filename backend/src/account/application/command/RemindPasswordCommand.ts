@@ -1,5 +1,5 @@
 import { Email } from '@account/domain';
-import { Command } from '@shared-kernel/command';
+import { Command } from '@shared-kernel/cqrs/command';
 
 export class RemindPasswordCommand extends Command {
   public static create(plainEmail: string): RemindPasswordCommand {

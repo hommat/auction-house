@@ -1,11 +1,11 @@
 import { RemindPasswordCommand } from '@account/application/command';
 import { mockEmail1 } from '@mocks/account';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
 describe('RemindPasswordCommand', () => {
   describe('create', () => {
-    it('should throw CommandInvalidInputException when email is not valid', () => {
-      expect(() => RemindPasswordCommand.create('')).toThrow(CommandInvalidInputException);
+    it('should throw InvalidInputException when email is not valid', () => {
+      expect(() => RemindPasswordCommand.create('')).toThrow(InvalidInputException);
     });
 
     it('should return RemindPasswordCommand when input is valid', () => {

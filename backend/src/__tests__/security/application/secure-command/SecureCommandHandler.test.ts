@@ -1,6 +1,6 @@
-import { Command } from '@shared-kernel/command';
-import { SecureCommandHandler } from '@security/application/command';
-import { CommandAccessDeniedException } from '@security/application/command/exception';
+import { Command } from '@shared-kernel/cqrs/command';
+import { SecureCommandHandler } from '@security/application/secure-command';
+import { CommandAccessDeniedException } from '@security/application/secure-command/exception';
 
 class TestCommand extends Command {}
 

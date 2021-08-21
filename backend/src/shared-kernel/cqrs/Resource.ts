@@ -1,9 +1,7 @@
 import { ValidationFailedException } from '@shared-kernel/validation';
-import { CommandInvalidInputException } from '@shared-kernel/command/exception';
+import { InvalidInputException } from '@shared-kernel/cqrs/exception';
 
-export class Command {
-  constructor(private _isAsync: boolean = false) {}
-
+export class Resource {
   protected static createSafe<Result>(
     factoryFn: () => Result
   ): [Result | null, ValidationFailedException | null] {
@@ -28,12 +26,8 @@ export class Command {
     ) as ValidationFailedException[];
 
     if (validationExceptions.length > 0) {
-      throw new CommandInvalidInputException(validationExceptions);
+      throw new InvalidInputException(validationExceptions);
     }
-  }
-
-  public get isAsync(): boolean {
-    return this._isAsync;
   }
 
   public get name(): string {

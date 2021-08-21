@@ -1,4 +1,4 @@
-import { Command } from '@shared-kernel/command';
+import { Command } from '@shared-kernel/cqrs/command';
 import { Uuid } from '@shared-kernel/domain';
 
 export class ActivateAccountCommand extends Command {

@@ -1,4 +1,4 @@
-import { ICommandDispatcher } from '@shared-kernel/command';
+import { ICommandDispatcher } from '@shared-kernel/cqrs/command';
 
 export interface MockCommandDispatcher extends ICommandDispatcher {
   mockDispatch: jest.Mock;

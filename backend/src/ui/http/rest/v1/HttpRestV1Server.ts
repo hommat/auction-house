@@ -5,7 +5,7 @@ import {
   AccountRestV1ErrorHandler,
   AccountRestV1Router,
 } from '@account/ui/http/rest/v1';
-import { ICommandDispatcher } from '@shared-kernel/command';
+import { ICommandDispatcher } from '@shared-kernel/cqrs/command';
 import { IHttpServer } from '@ui/http';
 import { HttpRestV1Router } from '@ui/http/rest/v1';
 

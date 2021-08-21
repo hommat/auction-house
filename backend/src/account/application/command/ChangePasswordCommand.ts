@@ -1,5 +1,5 @@
 import { Password } from '@account/domain';
-import { Command } from '@shared-kernel/command';
+import { Command } from '@shared-kernel/cqrs/command';
 import { Uuid } from '@shared-kernel/domain';
 
 export class ChangePasswordCommand extends Command {

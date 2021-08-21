@@ -2,7 +2,7 @@ import { ActivateAccountCommand } from '@account/application/command';
 import { AccountNotFoundException } from '@account/application/exception';
 import { ActivationToken } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
-import { ICommandHandler } from '@shared-kernel/command';
+import { ICommandHandler } from '@shared-kernel/cqrs/command';
 
 export class ActivateAccountCommandHandler implements ICommandHandler<ActivateAccountCommand> {
   constructor(private _accountRepository: IAccountRepository) {}

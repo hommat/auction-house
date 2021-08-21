@@ -1,7 +1,7 @@
 import { RemindPasswordCommand } from '@account/application/command';
 import { INotifyService } from '@account/application/service/notify-service';
 import { IAccountRepository } from '@account/domain/repository';
-import { ICommandHandler } from '@shared-kernel/command';
+import { ICommandHandler } from '@shared-kernel/cqrs/command';
 
 export class RemindPasswordCommandHandler implements ICommandHandler<RemindPasswordCommand> {
   constructor(
