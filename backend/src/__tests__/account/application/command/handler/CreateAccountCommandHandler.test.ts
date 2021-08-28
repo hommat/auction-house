@@ -8,7 +8,6 @@ import {
 import { Account, AccountStatus } from '@account/domain';
 import {
   mockAccountId1,
-  mockAccountId2,
   mockEmail1,
   mockEmail2,
   mockLogin1,
@@ -34,7 +33,7 @@ describe('CreateAccountCommandHandler', () => {
         .fn()
         .mockResolvedValue([
           Account.createActivated(
-            mockAccountId2(),
+            mockAccountId1(),
             mockEmail2(),
             mockLogin1(),
             mockHashedPassword2()
@@ -66,7 +65,7 @@ describe('CreateAccountCommandHandler', () => {
         .fn()
         .mockResolvedValue([
           Account.createActivated(
-            mockAccountId2(),
+            mockAccountId1(),
             mockEmail1(),
             mockLogin2(),
             mockHashedPassword2()
@@ -112,12 +111,10 @@ describe('CreateAccountCommandHandler', () => {
 
     it('should create deactivated Account with given credentials', async () => {
       const mockCreateFn = jest.fn().mockReturnValue(Promise.resolve());
-      const mockGenerateIdFn = jest.fn().mockReturnValue(Promise.resolve(mockAccountId1()));
 
       const commandHandler = new CreateAccountCommandHandler(
         mockAccountRepository({
           create: mockCreateFn,
-          generateId: mockGenerateIdFn,
         }),
         mockNotifyService(),
         mockPasswordHashingService()
@@ -125,13 +122,11 @@ describe('CreateAccountCommandHandler', () => {
 
       await commandHandler.execute(createAccountCommand);
 
-      expect(mockGenerateIdFn.mock.calls.length).toBe(1);
       expect(mockCreateFn.mock.calls.length).toBe(1);
 
       const createdAccount: Account = mockCreateFn.mock.calls[0][0];
 
       expect(createdAccount.status).toBe(AccountStatus.DEACTIVATED);
-      expect(createdAccount.accountId.equals(mockAccountId1())).toBe(true);
       expect(createdAccount.email.equals(mockEmail1())).toBe(true);
       expect(createdAccount.login.equals(mockLogin1())).toBe(true);
     });

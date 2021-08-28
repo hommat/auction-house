@@ -3,6 +3,9 @@ import { AccessService } from '@security/application/service/access-service/impl
 import { Role, User, RoleSet } from '@security/domain';
 import { IUserRepository } from '@security/domain/repository';
 
+const userId = mockUserId();
+const userUuid = userId.uuid.value;
+
 const createAccessService = (userExists: boolean, userRoles: Role[]): AccessService => {
   const userRepo: IUserRepository = {
     findOne: () => {
@@ -10,7 +13,7 @@ const createAccessService = (userExists: boolean, userRoles: Role[]): AccessServ
         throw Error();
       }
 
-      return Promise.resolve(new User(mockUserId(), new RoleSet(userRoles)));
+      return Promise.resolve(new User(userId, new RoleSet(userRoles)));
     },
   };
 
@@ -22,19 +25,19 @@ describe('AccessService', () => {
     it('should return false when user does not exist', async () => {
       const accessService = createAccessService(false, [Role.USER]);
 
-      expect(await accessService.hasCreateAuctionAccess(1)).toBe(false);
+      expect(await accessService.hasCreateAuctionAccess(userUuid)).toBe(false);
     });
 
     it('should return false when user does not have user role', async () => {
       const accessService = createAccessService(true, []);
 
-      expect(await accessService.hasCreateAuctionAccess(1)).toBe(false);
+      expect(await accessService.hasCreateAuctionAccess(userUuid)).toBe(false);
     });
 
     it('should return true when user exists and has user role', async () => {
       const accessService = createAccessService(true, [Role.USER]);
 
-      expect(await accessService.hasCreateAuctionAccess(1)).toBe(true);
+      expect(await accessService.hasCreateAuctionAccess(userUuid)).toBe(true);
     });
   });
 
@@ -42,19 +45,19 @@ describe('AccessService', () => {
     it('should return false when user does not exist', async () => {
       const accessService = createAccessService(false, [Role.USER]);
 
-      expect(await accessService.hasMakeBidAccess(1)).toBe(false);
+      expect(await accessService.hasMakeBidAccess(userUuid)).toBe(false);
     });
 
     it('should return false when user does not have user role', async () => {
       const accessService = createAccessService(true, []);
 
-      expect(await accessService.hasMakeBidAccess(1)).toBe(false);
+      expect(await accessService.hasMakeBidAccess(userUuid)).toBe(false);
     });
 
     it('should return true when user exists and has user role', async () => {
       const accessService = createAccessService(true, [Role.USER]);
 
-      expect(await accessService.hasMakeBidAccess(1)).toBe(true);
+      expect(await accessService.hasMakeBidAccess(userUuid)).toBe(true);
     });
   });
 });

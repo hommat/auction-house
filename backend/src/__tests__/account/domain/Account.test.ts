@@ -2,6 +2,7 @@ import { Account, AccountStatus } from '@account/domain';
 import {
   AccountNotDeactivatedException,
   InvalidActivationTokenException,
+  InvalidChangePasswordTokenException,
 } from '@account/domain/exception/account';
 import {
   mockAccountId1,
@@ -11,6 +12,8 @@ import {
   mockHashedPassword2,
   mockActivationToken1,
   mockActivationToken2,
+  mockChangePasswordToken1,
+  mockChangePasswordToken2,
 } from '@mocks/account';
 
 describe('Account', () => {
@@ -84,8 +87,8 @@ describe('Account', () => {
     });
   });
 
-  describe('changePassword', () => {
-    it('should update password', () => {
+  describe('setChangePasswordToken', () => {
+    it('should update token', () => {
       const account = Account.createActivated(
         mockAccountId1(),
         mockEmail1(),
@@ -93,10 +96,59 @@ describe('Account', () => {
         mockHashedPassword1()
       );
 
+      const token = mockChangePasswordToken2();
+      expect(account.changePasswordToken).not.toBe(token);
+
+      account.setChangePasswordToken(token);
+      expect(account.changePasswordToken).toBe(token);
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should throw InvalidChangePasswordTokenException when account token is null', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
+
+      expect(() =>
+        account.changePassword(mockChangePasswordToken1(), mockHashedPassword1())
+      ).toThrow(InvalidChangePasswordTokenException);
+    });
+
+    it('should throw InvalidChangePasswordTokenException when account token is different than given token', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
+
+      account.setChangePasswordToken(mockChangePasswordToken1());
+
+      expect(() =>
+        account.changePassword(mockChangePasswordToken2(), mockHashedPassword1())
+      ).toThrow(InvalidChangePasswordTokenException);
+    });
+
+    it('should update password and remove token', () => {
+      const account = Account.createActivated(
+        mockAccountId1(),
+        mockEmail1(),
+        mockLogin1(),
+        mockHashedPassword1()
+      );
+
+      const token = mockChangePasswordToken1();
       const newPassword = mockHashedPassword2();
-      account.changePassword(newPassword);
+
+      account.setChangePasswordToken(mockChangePasswordToken1());
+      account.changePassword(token, newPassword);
 
       expect(account.password.equals(newPassword));
+      expect(account.changePasswordToken).toBe(null);
     });
   });
 });

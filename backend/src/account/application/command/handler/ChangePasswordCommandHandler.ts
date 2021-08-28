@@ -1,6 +1,7 @@
 import { ChangePasswordCommand } from '@account/application/command';
 import { AccountNotFoundException } from '@account/application/exception';
 import { IPasswordHashingService } from '@account/application/service/password-hashing-service';
+import { ChangePasswordToken } from '@account/domain';
 import { IAccountRepository } from '@account/domain/repository';
 import { ICommandHandler } from '@shared-kernel/cqrs/command';
 
@@ -12,17 +13,16 @@ export class ChangePasswordCommandHandler implements ICommandHandler<ChangePassw
 
   public async execute(command: ChangePasswordCommand): Promise<void> {
     const { password, changePasswordTokenUuid } = command;
-    const account = await this._accountRepository.findByChangePasswordTokenUuid(
-      changePasswordTokenUuid
-    );
+    const changePasswordToken = new ChangePasswordToken(changePasswordTokenUuid);
+    const account = await this._accountRepository.findByChangePasswordToken(changePasswordToken);
 
     if (account === null) {
       throw new AccountNotFoundException();
     }
 
     const hashedPassword = await this._passwordHashingService.hash(password);
-    account.changePassword(hashedPassword);
+    account.changePassword(changePasswordToken, hashedPassword);
 
-    this._accountRepository.saveAndDestroyChangePasswordToken(account);
+    await this._accountRepository.save(account);
   }
 }

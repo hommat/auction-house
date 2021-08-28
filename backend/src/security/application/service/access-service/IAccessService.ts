@@ -1,4 +1,4 @@
 export interface IAccessService {
-  hasCreateAuctionAccess(userId: number): Promise<boolean>;
-  hasMakeBidAccess(userId: number): Promise<boolean>;
+  hasCreateAuctionAccess(userId: string): Promise<boolean>;
+  hasMakeBidAccess(userId: string): Promise<boolean>;
 }

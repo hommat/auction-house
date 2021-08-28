@@ -19,13 +19,13 @@ beforeEach(() => {
 describe('ChangePasswordCommandHandler', () => {
   describe('execute', () => {
     it('should throw AccountNotFoundException when account does not exists', async () => {
-      const mockFindByChangePasswordTokenUuidFn = jest.fn().mockResolvedValue(null);
-      const mockSaveAndDestroyChangePasswordTokenFn = jest.fn().mockReturnValue(Promise.resolve());
+      const mockFindByChangePasswordTokenFn = jest.fn().mockResolvedValue(null);
+      const mockSaveFn = jest.fn().mockReturnValue(Promise.resolve());
 
       const commandHandler = new ChangePasswordCommandHandler(
         mockAccountRepository({
-          findByChangePasswordTokenUuid: mockFindByChangePasswordTokenUuidFn,
-          saveAndDestroyChangePasswordToken: mockSaveAndDestroyChangePasswordTokenFn,
+          findByChangePasswordToken: mockFindByChangePasswordTokenFn,
+          save: mockSaveFn,
         }),
         mockPasswordHashingService()
       );
@@ -34,19 +34,20 @@ describe('ChangePasswordCommandHandler', () => {
         AccountNotFoundException
       );
 
-      expect(mockSaveAndDestroyChangePasswordTokenFn.mock.calls.length).toBe(0);
+      expect(mockFindByChangePasswordTokenFn.mock.calls.length).toBe(1);
+      expect(mockSaveFn.mock.calls.length).toBe(0);
     });
 
     it('should call changePassword function on account with hashed password', async () => {
       const hashedPassword = mockHashedPassword1();
       const mockChangePasswordFn = jest.fn();
       const account: Partial<Account> = { changePassword: mockChangePasswordFn };
-      const mockFindByChangePasswordTokenUuidFn = jest.fn().mockResolvedValue(account);
+      const mockFindByChangePasswordTokenFn = jest.fn().mockResolvedValue(account);
       const mockHashFn = jest.fn().mockResolvedValue(hashedPassword);
 
       const commandHandler = new ChangePasswordCommandHandler(
         mockAccountRepository({
-          findByChangePasswordTokenUuid: mockFindByChangePasswordTokenUuidFn,
+          findByChangePasswordToken: mockFindByChangePasswordTokenFn,
         }),
         mockPasswordHashingService({ hash: mockHashFn })
       );
@@ -54,21 +55,24 @@ describe('ChangePasswordCommandHandler', () => {
       await commandHandler.execute(changePasswordCommand);
 
       expect(mockChangePasswordFn.mock.calls.length).toBe(1);
-      expect(mockChangePasswordFn.mock.calls[0][0]).toBe(hashedPassword);
+      expect(mockChangePasswordFn.mock.calls[0][1]).toBe(hashedPassword);
     });
 
-    it('should save account and destroy change password token', async () => {
-      const mockSaveAndDestroyChangePasswordTokenFn = jest.fn().mockReturnValue(Promise.resolve());
+    it('should save account', async () => {
+      const mockSaveFn = jest.fn().mockReturnValue(Promise.resolve());
+      const account: Partial<Account> = { changePassword: jest.fn() };
+      const mockFindByChangePasswordTokenFn = jest.fn().mockResolvedValue(account);
 
       const commandHandler = new ChangePasswordCommandHandler(
         mockAccountRepository({
-          saveAndDestroyChangePasswordToken: mockSaveAndDestroyChangePasswordTokenFn,
+          save: mockSaveFn,
+          findByChangePasswordToken: mockFindByChangePasswordTokenFn,
         }),
         mockPasswordHashingService()
       );
 
       await commandHandler.execute(changePasswordCommand);
-      expect(mockSaveAndDestroyChangePasswordTokenFn.mock.calls.length).toBe(1);
+      expect(mockSaveFn.mock.calls.length).toBe(1);
     });
   });
 });

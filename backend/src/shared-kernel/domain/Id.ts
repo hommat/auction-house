@@ -1,21 +1,13 @@
-import { IdValidator } from '@shared-kernel/domain/validation/validator';
+import { Uuid } from '@shared-kernel/domain';
 
 export class Id {
-  public static create(value: number): Id {
-    const id = new Id(value);
-
-    new IdValidator(id).validate();
-
-    return id;
-  }
-
-  protected constructor(private _value: number) {}
+  constructor(private _uuid: Uuid) {}
 
   public equals(anotherId: Id): boolean {
-    return this._value === anotherId.value;
+    return this._uuid.equals(anotherId.uuid);
   }
 
-  public get value(): number {
-    return this._value;
+  public get uuid(): Uuid {
+    return this._uuid;
   }
 }

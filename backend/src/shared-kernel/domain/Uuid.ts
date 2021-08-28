@@ -9,11 +9,7 @@ export class Uuid {
     return uuid;
   }
 
-  public static createWithoutValidation(value: string): Uuid {
-    return new Uuid(value);
-  }
-
-  protected constructor(private _value: string) {}
+  constructor(private _value: string) {}
 
   public equals(anotherUuid: Uuid): boolean {
     return this._value === anotherUuid.value;

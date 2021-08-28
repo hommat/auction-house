@@ -2,6 +2,7 @@ import {
   AccountId,
   AccountStatus,
   ActivationToken,
+  ChangePasswordToken,
   Email,
   HashedPassword,
   Login,
@@ -9,6 +10,7 @@ import {
 import {
   AccountNotDeactivatedException,
   InvalidActivationTokenException,
+  InvalidChangePasswordTokenException,
 } from '@account/domain/exception/account';
 
 export class Account {
@@ -38,13 +40,14 @@ export class Account {
     );
   }
 
-  private constructor(
+  constructor(
     private _accountId: AccountId,
     private _email: Email,
     private _login: Login,
     private _password: HashedPassword,
     private _status: AccountStatus,
-    private _activationToken: ActivationToken | null = null
+    private _activationToken: ActivationToken | null = null,
+    private _changePasswordToken: ChangePasswordToken | null = null
   ) {}
 
   public activate(activationToken: ActivationToken): void {
@@ -64,8 +67,24 @@ export class Account {
     return this.hasActivationToken && this._activationToken!.equals(activationToken);
   }
 
-  public changePassword(newPassword: HashedPassword): void {
+  public changePassword(
+    changePasswordToken: ChangePasswordToken,
+    newPassword: HashedPassword
+  ): void {
+    if (!this.isChangePasswordTokenValid(changePasswordToken)) {
+      throw new InvalidChangePasswordTokenException();
+    }
+
+    this._changePasswordToken = null;
     this._password = newPassword;
+  }
+
+  private isChangePasswordTokenValid(changePasswordToken: ChangePasswordToken): boolean {
+    return this.hasChangePasswordToken && this._changePasswordToken!.equals(changePasswordToken);
+  }
+
+  public setChangePasswordToken(changePasswordToken: ChangePasswordToken): void {
+    this._changePasswordToken = changePasswordToken;
   }
 
   public get accountId(): AccountId {
@@ -92,11 +111,19 @@ export class Account {
     return this._activationToken;
   }
 
+  public get changePasswordToken(): ChangePasswordToken | null {
+    return this._changePasswordToken;
+  }
+
   private get isDeactivated(): boolean {
     return this._status === AccountStatus.DEACTIVATED;
   }
 
   private get hasActivationToken(): boolean {
-    return this.activationToken !== null;
+    return this._activationToken !== null;
+  }
+
+  private get hasChangePasswordToken(): boolean {
+    return this._changePasswordToken !== null;
   }
 }

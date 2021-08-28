@@ -1,15 +1,15 @@
 import { LoginValidator } from '@account/domain/validation/validator';
 
 export class Login {
-  private constructor(private _value: string) {}
-
   public static create(value: string): Login {
     const login = new Login(value);
 
     new LoginValidator(login).validate();
 
-    return new Login(value);
+    return login;
   }
+
+  constructor(private _value: string) {}
 
   public equals(anotherLogin: Login): boolean {
     return this._value === anotherLogin.value;

@@ -8,7 +8,7 @@ export class Password {
 
     new PasswordValidator(password).validate();
 
-    return new Password(value);
+    return password;
   }
 
   public equals(anotherPassword: Password): boolean {
