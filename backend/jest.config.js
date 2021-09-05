@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/(?:.+?)/__mocks__/'],
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/scripts/', '<rootDir>/(?:.+?)/__mocks__/'],
   moduleNameMapper: {
     '@account/(.*)': '<rootDir>/src/account/$1',
     '@auction/(.*)': '<rootDir>/src/auction/$1',
@@ -11,5 +11,7 @@ module.exports = {
     '@ui/(.*)': '<rootDir>/src/ui/$1',
 
     '@mocks/(.*)': '<rootDir>/src/__tests__/__mocks__/$1',
+
+    '@scripts/(.*)': '<rootDir>/scripts/$1',
   },
 };

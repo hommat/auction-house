@@ -1,11 +1,8 @@
-import { Model } from 'sequelize';
-
 import { Account, AccountStatus } from '@account/domain';
 import { AccountConverter } from '@account/infrastructure/repository/sequelize/converter';
-import {
-  AccountAttributes,
-  AccountCreationAttributes,
-} from '@account/infrastructure/repository/sequelize/model/attributes';
+import { Account as AccountModel } from '@account/infrastructure/repository/sequelize/model';
+import { AccountAttributes } from '@account/infrastructure/repository/sequelize/model/attributes';
+
 import {
   mockAccountId1,
   mockActivationToken1,
@@ -22,16 +19,14 @@ describe('AccountConverter', () => {
 
     beforeEach(() => {
       const dbAccount = {
-        _attributes: {
-          activationToken: mockActivationToken1().uuid.value,
-          changePasswordToken: mockChangePasswordToken1().uuid.value,
-          email: mockEmail1().value,
-          id: mockAccountId1().uuid.value,
-          login: mockLogin1().value,
-          password: mockHashedPassword1().value,
-          status: AccountStatus.ACTIVATED,
-        },
-      } as Model<AccountAttributes, AccountCreationAttributes>;
+        activationToken: mockActivationToken1().uuid.value,
+        changePasswordToken: mockChangePasswordToken1().uuid.value,
+        email: mockEmail1().value,
+        id: mockAccountId1().uuid.value,
+        login: mockLogin1().value,
+        password: mockHashedPassword1().value,
+        status: AccountStatus.ACTIVATED,
+      } as AccountModel;
 
       domainAccount = AccountConverter.toDomain(dbAccount);
     });
@@ -66,12 +61,16 @@ describe('AccountConverter', () => {
   });
 
   describe('toPersist', () => {
-    let dbAccount: AccountCreationAttributes;
+    let dbAccount: AccountAttributes;
 
     beforeEach(() => {
       const account = mockDeactivatedAccount1();
       account.setChangePasswordToken(mockChangePasswordToken1());
       dbAccount = AccountConverter.toPersist(account);
+    });
+
+    it('should convert id', () => {
+      expect(dbAccount.id).toBe(mockAccountId1().uuid.value);
     });
 
     it('should convert activation token', () => {

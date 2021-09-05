@@ -1,15 +1,18 @@
 import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
 
+import { AccountStatus } from '@account/domain';
+import { AccountAttributes } from '@account/infrastructure/repository/sequelize/model/attributes';
+
 @Table
-export class Account extends Model {
+export class Account extends Model<AccountAttributes, AccountAttributes> {
   @PrimaryKey
-  @Column(DataType.UUIDV4)
+  @Column(DataType.UUID)
   public id: string;
 
-  @Column(DataType.UUIDV4)
+  @Column(DataType.UUID)
   public activationToken: string | null;
 
-  @Column(DataType.UUIDV4)
+  @Column(DataType.UUID)
   public changePasswordToken: string | null;
 
   @Column(DataType.STRING(64))
@@ -22,5 +25,5 @@ export class Account extends Model {
   public password: string;
 
   @Column(DataType.STRING(32))
-  public status: string;
+  public status: AccountStatus;
 }

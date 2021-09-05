@@ -1,5 +1,3 @@
-import { Model } from 'sequelize';
-
 import {
   Account,
   AccountId,
@@ -9,16 +7,13 @@ import {
   HashedPassword,
   Login,
 } from '@account/domain';
-import {
-  AccountAttributes,
-  AccountCreationAttributes,
-} from '@account/infrastructure/repository/sequelize/model/attributes';
+import { Account as AccountModel } from '@account/infrastructure/repository/sequelize/model';
+import { AccountAttributes } from '@account/infrastructure/repository/sequelize/model/attributes';
 import { Uuid } from '@shared-kernel/domain';
 
 export class AccountConverter {
-  public static toDomain(account: Model<AccountAttributes, AccountCreationAttributes>): Account {
-    const { activationToken, changePasswordToken, email, id, login, password, status } =
-      account._attributes;
+  public static toDomain(account: AccountModel): Account {
+    const { activationToken, changePasswordToken, email, id, login, password, status } = account;
 
     return new Account(
       new AccountId(new Uuid(id)),
@@ -31,8 +26,9 @@ export class AccountConverter {
     );
   }
 
-  public static toPersist(account: Account): AccountCreationAttributes {
+  public static toPersist(account: Account): AccountAttributes {
     return {
+      id: account.accountId.uuid.value,
       activationToken: account.activationToken && account.activationToken.uuid.value,
       changePasswordToken: account.changePasswordToken && account.changePasswordToken.uuid.value,
       email: account.email.value,
