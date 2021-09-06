@@ -1,9 +1,9 @@
-import { mockUserId } from '@mocks/security';
+import { mockUserId1 } from '@mocks/security';
 import { AccessService } from '@security/application/service/access-service/implementation';
 import { Role, User, RoleSet } from '@security/domain';
 import { IUserRepository } from '@security/domain/repository';
 
-const userId = mockUserId();
+const userId = mockUserId1();
 const userUuid = userId.uuid.value;
 
 const createAccessService = (userExists: boolean, userRoles: Role[]): AccessService => {

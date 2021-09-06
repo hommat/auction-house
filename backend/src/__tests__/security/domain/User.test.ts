@@ -1,5 +1,5 @@
 import { Role, User } from '@security/domain';
-import { mockRoleSet, mockUserId } from '@mocks/security';
+import { mockRoleSet, mockUserId1 } from '@mocks/security';
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -11,7 +11,7 @@ describe('User', () => {
       const roleSet = mockRoleSet();
       const spy = jest.spyOn(roleSet, 'includes').mockImplementation(() => true);
 
-      const user = new User(mockUserId(), roleSet);
+      const user = new User(mockUserId1(), roleSet);
 
       expect(user.hasRole(Role.ADMINISTRATOR)).toBe(true);
       expect(spy.mock.calls.length).toBe(1);
@@ -22,7 +22,7 @@ describe('User', () => {
       const roleSet = mockRoleSet();
       const spy = jest.spyOn(roleSet, 'includes').mockImplementation(() => false);
 
-      const user = new User(mockUserId(), roleSet);
+      const user = new User(mockUserId1(), roleSet);
 
       expect(user.hasRole(Role.ADMINISTRATOR)).toBe(false);
       expect(spy.mock.calls.length).toBe(1);
