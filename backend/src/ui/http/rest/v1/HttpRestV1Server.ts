@@ -12,14 +12,16 @@ import { HttpRestV1Router } from '@ui/http/rest/v1';
 export class HttpRestV1Server implements IHttpServer {
   private _server = Fastify();
 
-  constructor(private _commandDispatcher: ICommandDispatcher, private _port: number) {}
+  constructor(
+    private _commandDispatcher: ICommandDispatcher,
+    private _address: string,
+    private _port: number
+  ) {}
 
-  public async run(): Promise<void> {
+  public run(): void {
     this.registerRoutes();
 
-    return this._server
-      .listen(this._port)
-      .then(this.handleServerRunSuccess.bind(this), this.handleServerRunFailure.bind(this));
+    this._server.listen(this._port, this._address, this.handleListenCallback.bind(this));
   }
 
   private registerRoutes(): void {
@@ -34,12 +36,12 @@ export class HttpRestV1Server implements IHttpServer {
     routers.forEach((router) => router.registerRoutes());
   }
 
-  private handleServerRunSuccess(): void {
-    this._server.log.info(`HTTP rest server v1 is listening on port ${this._port}...`);
-  }
+  private handleListenCallback(err: unknown): void {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
 
-  private handleServerRunFailure(err: unknown): void {
-    this._server.log.error(err);
-    process.exit(1);
+    console.log(`HTTP rest server v1 is listening on port ${this._port}...`);
   }
 }

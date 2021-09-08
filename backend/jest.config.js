@@ -12,6 +12,6 @@ module.exports = {
 
     '@mocks/(.*)': '<rootDir>/src/__tests__/__mocks__/$1',
 
-    '@scripts/(.*)': '<rootDir>/scripts/$1',
+    '@scripts/(.*)': '<rootDir>/src/scripts/$1',
   },
 };

@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 
-import { Account } from '../../src/account/infrastructure/repository/sequelize/model';
+import { Account } from '@account/infrastructure/repository/sequelize/model';
 
 export async function connect(): Promise<Sequelize> {
   const sequelize = new Sequelize({

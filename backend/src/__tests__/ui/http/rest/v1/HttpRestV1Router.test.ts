@@ -77,7 +77,7 @@ describe('HttpRestV1Router', () => {
       expect(mockHandleErrorFn.mock.calls.length).toBe(0);
     });
 
-    it('should register route with added baseUrl to route url', () => {
+    it('should register route with added apiUrl and baseUrl to route url', () => {
       const mockRouteHandler = jest.fn();
       const mockErrorHandler: IHttpV1ErrorHandler = {
         handle: jest.fn(),
@@ -92,7 +92,7 @@ describe('HttpRestV1Router', () => {
 
       router.registerRoutes();
 
-      expect(router.route.url).toBe('/some-base-url/test-url');
+      expect(router.route.url).toBe('/api/v1/some-base-url/test-url');
     });
 
     it('should register route with given http method', () => {

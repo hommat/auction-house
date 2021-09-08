@@ -21,20 +21,20 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types"],
+    "baseUrl": "./src",
     "paths": {
-      "@account/*": ["./src/account/*"],
-      "@auction/*": ["./src/auction/*"],
-      "@security/*": ["./src/security/*"],
-      "@shared-kernel/*": ["./src/shared-kernel/*"],
+      "@account/*": ["account/*"],
+      "@auction/*": ["auction/*"],
+      "@security/*": ["security/*"],
+      "@shared-kernel/*": ["shared-kernel/*"],
 
-      "@ui/*": ["./src/ui/*"],
+      "@ui/*": ["ui/*"],
 
-      "@mocks/*": ["./src/__tests__/__mocks__/*"],
+      "@mocks/*": ["__tests__/__mocks__/*"],
 
-      "@scripts/*": ["./scripts/*"]
+      "@scripts/*": ["scripts/*"]
     }
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "src/entry-point/**/*.ts", "src/scripts/**/*.ts"]
 }

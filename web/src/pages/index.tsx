@@ -1,7 +1,12 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 
 const Home: NextPage = () => {
-  return <h1>App works</h1>;
+  return (
+    <div>
+      <Link href="/account/create">account</Link>
+    </div>
+  );
 };
 
 export default Home;

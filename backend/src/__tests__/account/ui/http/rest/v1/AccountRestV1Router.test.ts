@@ -28,14 +28,14 @@ beforeEach(() => {
 describe('AccountRestV1Router', () => {
   describe('registerRoutes', () => {
     describe('create account route', () => {
-      const url = '/account/create';
+      const url = '/api/v1/account/create';
       let createAccountRoute: any;
 
       beforeEach(() => {
         createAccountRoute = routes.find((r) => r.url === url)!;
       });
 
-      it(`should have ${url}`, () => {
+      it(`should have ${url} url`, () => {
         expect(createAccountRoute.url).toBe(url);
       });
 
