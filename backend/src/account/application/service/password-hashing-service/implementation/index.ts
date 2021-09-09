@@ -1,1 +1,1 @@
-export * from './TempPasswordHashingService';
+export * from './Argon2PasswordHashingService';

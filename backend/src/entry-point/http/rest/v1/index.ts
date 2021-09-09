@@ -3,7 +3,7 @@ import { Registry } from '@shared-kernel/cqrs';
 import { CreateAccountCommand } from '@account/application/command';
 import { CreateAccountCommandHandler } from '@account/application/command/handler';
 import { TempNotifyService } from '@account/application/service/notify-service/implementation';
-import { TempPasswordHashingService } from '@account/application/service/password-hashing-service/implementation';
+import { Argon2PasswordHashingService } from '@account/application/service/password-hashing-service/implementation';
 import { SequelizeAccountRepository } from '@account/infrastructure/repository/sequelize';
 
 import { connect } from '../../../../scripts/db';
@@ -18,7 +18,7 @@ async function start() {
   const accountRepository = new SequelizeAccountRepository(sequelize);
 
   const accountNotifyService = new TempNotifyService();
-  const accountPassswordHashingService = new TempPasswordHashingService();
+  const accountPassswordHashingService = new Argon2PasswordHashingService();
 
   const commandRegistry = new Registry();
   commandRegistry.register(
