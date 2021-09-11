@@ -10,7 +10,7 @@ import { SignInQueryOutput } from '@security/read-model/query/output';
 import { IQueryHandler } from '@shared-kernel/cqrs/query';
 import { Uuid } from '@shared-kernel/domain';
 
-export class SequelizeSignInQueryHandler implements IQueryHandler<SingInQuery, SignInQueryOutput> {
+export class SignInQueryHandler implements IQueryHandler<SingInQuery, SignInQueryOutput> {
   private _accountRepository: Repository<Account>;
 
   constructor(

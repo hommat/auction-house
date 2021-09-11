@@ -14,6 +14,8 @@ import {
   mockActivationToken2,
   mockChangePasswordToken1,
   mockChangePasswordToken2,
+  mockThirdPartyAccountId1,
+  mockThirdPartyAccountService1,
 } from '@mocks/account';
 
 describe('Account', () => {
@@ -41,6 +43,19 @@ describe('Account', () => {
       );
 
       expect(account.status).toBe(AccountStatus.DEACTIVATED);
+    });
+  });
+
+  describe('createThirdParty', () => {
+    it('should create account with status login required', () => {
+      const account = Account.createThirdParty(
+        mockAccountId1(),
+        mockEmail1(),
+        mockThirdPartyAccountId1(),
+        mockThirdPartyAccountService1()
+      );
+
+      expect(account.status).toBe(AccountStatus.LOGIN_REQUIRED);
     });
   });
 
@@ -147,7 +162,7 @@ describe('Account', () => {
       account.setChangePasswordToken(mockChangePasswordToken1());
       account.changePassword(token, newPassword);
 
-      expect(account.password.equals(newPassword));
+      expect(account.password!.equals(newPassword));
       expect(account.changePasswordToken).toBe(null);
     });
   });

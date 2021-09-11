@@ -9,10 +9,10 @@ import {
 } from '@shared-kernel/validation';
 
 export class JwtDataTypeSpecification extends CompositeSpecification<Jwt> implements IValidable {
-  private stringSpecification = new StringSpecification();
+  private _stringSpecification = new StringSpecification();
 
   public isSatisfiedBy(candidate: Jwt): boolean {
-    return this.stringSpecification.isSatisfiedBy(candidate.value);
+    return this._stringSpecification.isSatisfiedBy(candidate.value);
   }
 
   public validationError(): ValidationError {

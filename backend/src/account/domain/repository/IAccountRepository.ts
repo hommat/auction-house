@@ -7,6 +7,6 @@ export interface IAccountRepository {
 
   findByActivationToken(activationToken: ActivationToken): Promise<Account | null>;
   findByChangePasswordToken(changePasswordToken: ChangePasswordToken): Promise<Account | null>;
-  findByLoginOrEmail(login: Login, email: Email): Promise<Account[]>;
   findByEmail(email: Email): Promise<Account | null>;
+  findByLoginOrEmail(login: Login, email: Email): Promise<Account[]>;
 }

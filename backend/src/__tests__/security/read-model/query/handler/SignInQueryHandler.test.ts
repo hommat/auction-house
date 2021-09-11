@@ -14,7 +14,7 @@ import { clear, connect } from '@scripts/db';
 import { InvalidCredentialsException } from '@security/read-model/exception';
 import { SingInQuery } from '@security/read-model/query';
 import { SignInQueryInput } from '@security/read-model/query/input';
-import { SequelizeSignInQueryHandler } from '@security/read-model/query/handler/sequelize';
+import { SignInQueryHandler } from '@security/read-model/query/handler';
 import { mockJwt1 } from '@mocks/security';
 
 let sequelize: Sequelize;
@@ -38,11 +38,11 @@ afterAll(async () => {
   await sequelize.close();
 });
 
-describe('SequelizeSignInQueryHandler', () => {
+describe('SignInQueryHandler', () => {
   it('should query db with hashedPassword', async () => {
     const hashedPassword = mockHashedPassword2();
 
-    const handler = new SequelizeSignInQueryHandler(
+    const handler = new SignInQueryHandler(
       mockPasswordHashingService({ hash: jest.fn().mockReturnValue(hashedPassword) }),
       mockJwtService(),
       sequelize
@@ -60,7 +60,7 @@ describe('SequelizeSignInQueryHandler', () => {
   });
 
   it('should throw InvalidCredentialsException when user with given login and password does not exist', async () => {
-    const handler = new SequelizeSignInQueryHandler(
+    const handler = new SignInQueryHandler(
       mockPasswordHashingService(),
       mockJwtService(),
       sequelize
@@ -77,7 +77,7 @@ describe('SequelizeSignInQueryHandler', () => {
   it('should return signed jwt', async () => {
     const jwt = mockJwt1();
 
-    const handler = new SequelizeSignInQueryHandler(
+    const handler = new SignInQueryHandler(
       mockPasswordHashingService(),
       mockJwtService({ sign: jest.fn().mockReturnValue(jwt) }),
       sequelize

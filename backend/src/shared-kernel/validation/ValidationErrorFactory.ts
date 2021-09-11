@@ -12,6 +12,15 @@ export class ValidationErrorFactory {
     );
   }
 
+  public static createValue(
+    availableValues: Array<string | number | boolean | null>
+  ): ValidationError {
+    return new ValidationError(
+      ValidationErrorType.INVALID_VALUE,
+      new ValidationErrorDetails({ [ValidationErrorDetailType.VALUES]: availableValues })
+    );
+  }
+
   public static createTooSmall(minValue: number): ValidationError {
     return new ValidationError(
       ValidationErrorType.TOO_SMALL,

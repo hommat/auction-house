@@ -1,6 +1,5 @@
 import { Password } from '@account/domain';
 import { PasswordDataTypeSpecification } from '@account/domain/specification/password';
-import { mockValidationSuccess } from '@mocks/utils';
 import {
   ValidationError,
   ValidationErrorDataType,
@@ -9,30 +8,22 @@ import {
 
 let passwordDataTypeSpecification: PasswordDataTypeSpecification;
 
-beforeAll(() => {
-  mockValidationSuccess();
-});
-
 beforeEach(() => {
   passwordDataTypeSpecification = new PasswordDataTypeSpecification();
-});
-
-afterAll(() => {
-  jest.restoreAllMocks();
 });
 
 describe('PasswordDataTypeSpecification', () => {
   describe('isSatisfiedBy', () => {
     it('returns true when password is string', () => {
-      const login1 = Password.create('123');
+      const password1 = Password.create('123');
 
-      expect(passwordDataTypeSpecification.isSatisfiedBy(login1)).toBe(true);
+      expect(passwordDataTypeSpecification.isSatisfiedBy(password1)).toBe(true);
     });
 
     it('returns false when password is not string', () => {
-      const login1 = Password.create(123 as any);
+      const password1 = Password.create(123 as any);
 
-      expect(passwordDataTypeSpecification.isSatisfiedBy(login1)).toBe(false);
+      expect(passwordDataTypeSpecification.isSatisfiedBy(password1)).toBe(false);
     });
   });
 

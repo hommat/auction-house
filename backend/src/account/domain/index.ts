@@ -7,3 +7,6 @@ export * from './Email';
 export * from './Login';
 export * from './HashedPassword';
 export * from './Password';
+export * from './ThirdPartyAccountId';
+export * from './ThirdPartyAccountService';
+export * from './ThirdPartyAccountServiceType';

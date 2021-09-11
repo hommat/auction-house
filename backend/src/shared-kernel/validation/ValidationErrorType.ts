@@ -1,5 +1,6 @@
 export enum ValidationErrorType {
   INVALID_TYPE = 'invalid-type',
+  INVALID_VALUE = 'invalid-value',
 
   TOO_SMALL = 'too-small',
   TOO_BIG = 'too-big',

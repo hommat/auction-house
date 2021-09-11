@@ -6,6 +6,8 @@ import {
   Email,
   HashedPassword,
   Login,
+  ThirdPartyAccountId,
+  ThirdPartyAccountService,
 } from '@account/domain';
 import {
   AccountNotDeactivatedException,
@@ -40,14 +42,35 @@ export class Account {
     );
   }
 
+  public static createThirdParty(
+    accountId: AccountId,
+    email: Email,
+    thirdPartyAccountId: ThirdPartyAccountId,
+    thirdPartyAccountService: ThirdPartyAccountService
+  ): Account {
+    return new Account(
+      accountId,
+      email,
+      null,
+      null,
+      AccountStatus.LOGIN_REQUIRED,
+      null,
+      null,
+      thirdPartyAccountId,
+      thirdPartyAccountService
+    );
+  }
+
   constructor(
     private _accountId: AccountId,
     private _email: Email,
-    private _login: Login,
-    private _password: HashedPassword,
+    private _login: Login | null,
+    private _password: HashedPassword | null,
     private _status: AccountStatus,
     private _activationToken: ActivationToken | null = null,
-    private _changePasswordToken: ChangePasswordToken | null = null
+    private _changePasswordToken: ChangePasswordToken | null = null,
+    private _thirdPartyAccountId: ThirdPartyAccountId | null = null,
+    private _thirdPartyAccountService: ThirdPartyAccountService | null = null
   ) {}
 
   public activate(activationToken: ActivationToken): void {
@@ -95,11 +118,11 @@ export class Account {
     return this._email;
   }
 
-  public get login(): Login {
+  public get login(): Login | null {
     return this._login;
   }
 
-  public get password(): HashedPassword {
+  public get password(): HashedPassword | null {
     return this._password;
   }
 
@@ -113,6 +136,14 @@ export class Account {
 
   public get changePasswordToken(): ChangePasswordToken | null {
     return this._changePasswordToken;
+  }
+
+  public get thirdPartyAccountId(): ThirdPartyAccountId | null {
+    return this._thirdPartyAccountId;
+  }
+
+  public get thirdPartyAccountService(): ThirdPartyAccountService | null {
+    return this._thirdPartyAccountService;
   }
 
   private get isDeactivated(): boolean {

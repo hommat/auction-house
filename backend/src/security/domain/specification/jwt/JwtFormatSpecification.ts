@@ -6,10 +6,10 @@ import { IValidable, ValidationError, ValidationErrorFactory } from '@shared-ker
 export class JwtFormatSpecification extends CompositeSpecification<Jwt> implements IValidable {
   private readonly REGEXP = /(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)/;
 
-  private formatSpecification = new FormatSpecification(this.REGEXP);
+  private _formatSpecification = new FormatSpecification(this.REGEXP);
 
   public isSatisfiedBy(candidate: Jwt): boolean {
-    return this.formatSpecification.isSatisfiedBy(candidate.value);
+    return this._formatSpecification.isSatisfiedBy(candidate.value);
   }
 
   public validationError(): ValidationError {
